@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product Career OS · 52-Week Build</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root{
+  --ink:#0B0E13; --panel:#141A22; --panel2:#1B2330; --line:#27313F;
+  --text:#E9E6DD; --dim:#9AA6B5; --faint:#6B7787;
+  --gold:#E0B84C; --cyan:#69B9C8; --green:#82BE8D; --red:#E5645D; --violet:#A78BD0;
+  --disp:'Space Grotesk',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--ink);color:var(--text);font-family:var(--body);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font-family:inherit}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#2B3746;border-radius:8px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ---------- shell ---------- */
+.app{display:grid;grid-template-columns:216px 1fr;min-height:100vh}
+.rail{background:#0E131A;border-right:1px solid var(--line);padding:18px 12px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{font-family:var(--disp);font-weight:700;font-size:15px;letter-spacing:-.2px;padding:0 8px 4px}
+.brand span{color:var(--gold)}
+.brandsub{font-family:var(--mono);font-size:9.5px;color:var(--faint);letter-spacing:.14em;text-transform:uppercase;padding:0 8px 18px}
+.navbtn{display:flex;align-items:center;gap:9px;width:100%;background:none;border:0;color:var(--dim);padding:9px 10px;border-radius:8px;cursor:pointer;font-size:13px;text-align:left;margin-bottom:2px}
+.navbtn:hover{background:#161D27;color:var(--text)}
+.navbtn.on{background:#1C2532;color:var(--text);box-shadow:inset 2px 0 0 var(--gold)}
+.navbtn i{font-style:normal;font-size:13px;width:16px;text-align:center;opacity:.85}
+.navsec{font-family:var(--mono);font-size:9px;color:#4E5A6B;letter-spacing:.16em;text-transform:uppercase;padding:16px 10px 6px}
+.main{padding:26px 32px 90px;max-width:1180px}
+
+/* ---------- type ---------- */
+h1{font-family:var(--disp);font-size:26px;font-weight:700;margin:0 0 4px;letter-spacing:-.4px}
+h2{font-family:var(--disp);font-size:17px;font-weight:600;margin:0 0 12px;letter-spacing:-.2px}
+h3{font-family:var(--disp);font-size:14px;font-weight:600;margin:0 0 6px}
+.lede{color:var(--dim);font-size:13.5px;margin:0 0 22px;max-width:74ch}
+.kicker{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+.mono{font-family:var(--mono)}
+.muted{color:var(--dim)}
+.tiny{font-size:11.5px}
+
+/* ---------- panels ---------- */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+.panel+.panel{margin-top:14px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:980px){.g2,.g3,.g4{grid-template-columns:1fr}.app{grid-template-columns:1fr}.rail{position:static;height:auto}}
+
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.stat .n{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--gold);line-height:1.1}
+.stat .l{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-top:6px}
+.stat .s{font-size:11.5px;color:var(--dim);margin-top:4px}
+
+.meter{display:flex;gap:2px;margin-top:10px}
+.meter i{flex:1;height:6px;background:#212B38;border-radius:2px}
+.meter i.f{background:var(--gold)}
+.meter i.h{background:#6E5E31}
+
+/* ---------- chips/badges ---------- */
+.chip{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim);background:#111823}
+.chip.gold{color:var(--gold);border-color:#4A3D18}
+.chip.cyan{color:var(--cyan);border-color:#1F4650}
+.chip.green{color:var(--green);border-color:#27452C}
+.chip.red{color:var(--red);border-color:#4E2724}
+.chip.violet{color:var(--violet);border-color:#3D3352}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sp{justify-content:space-between}
+
+/* ---------- buttons ---------- */
+.btn{background:#1E2836;border:1px solid var(--line);color:var(--text);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:12.5px;font-weight:500;transition:.15s}
+.btn:hover{background:#25313F;border-color:#3A4759}
+.btn.pri{background:var(--gold);color:#161206;border-color:var(--gold);font-weight:600}
+.btn.pri:hover{background:#EFC85C}
+.btn.ghost{background:transparent}
+.btn.sm{padding:5px 10px;font-size:11.5px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* ---------- inputs ---------- */
+input,select,textarea{background:#0F151D;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 11px;font-family:inherit;font-size:13px;width:100%}
+textarea{resize:vertical;line-height:1.6}
+input:focus,select,textarea:focus{outline:none;border-color:#3E4C60}
+label.f{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:0 0 5px}
+.field{margin-bottom:12px}
+
+/* ---------- week cards ---------- */
+.qtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.qtab{background:#141A22;border:1px solid var(--line);color:var(--dim);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:12.5px}
+.qtab.on{background:#1F2937;color:var(--text);border-color:#3B4A5E}
+.qtab b{color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:6px}
+
+.wk{background:var(--panel);border:1px solid var(--line);border-radius:11px;margin-bottom:9px;overflow:hidden}
+.wk.done{border-color:#2C4632;background:#131A16}
+.wk.now{border-color:#5C4C1E;box-shadow:0 0 0 1px #3A310F}
+.wkhead{display:flex;align-items:center;gap:12px;padding:13px 15px;cursor:pointer}
+.wkhead:hover{background:#171E28}
+.wknum{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.1em;min-width:52px}
+.wktitle{font-family:var(--disp);font-size:13.5px;font-weight:600;flex:1}
+.wk.done .wktitle{color:var(--green)}
+.wkdate{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+.wkbody{display:none;padding:2px 15px 16px;border-top:1px solid var(--line)}
+.wk.open .wkbody{display:block}
+.wksec{margin-top:14px}
+.wksec .kicker{margin-bottom:6px}
+ul.t{margin:0;padding-left:17px}
+ul.t li{margin-bottom:4px;color:var(--dim);font-size:12.5px}
+ul.t li b{color:var(--text);font-weight:600}
+.res{display:flex;flex-direction:column;gap:5px}
+.res a{display:flex;gap:8px;align-items:baseline;font-size:12.5px;padding:6px 9px;background:#0F151D;border:1px solid var(--line);border-radius:7px}
+.res a:hover{border-color:#3A4759;text-decoration:none}
+.res a .src{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);min-width:70px}
+.res a .ti{color:var(--text);flex:1}
+.box{background:#0F151D;border:1px solid var(--line);border-left:2px solid var(--cyan);border-radius:7px;padding:11px 13px;font-size:12.5px;color:var(--dim)}
+.box.gold{border-left-color:var(--gold)}
+.box.green{border-left-color:var(--green)}
+.box b{color:var(--text)}
+
+/* ---------- case cards ---------- */
+.case{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:16px;display:flex;flex-direction:column;gap:9px}
+.case:hover{border-color:#3A4759}
+.case h3{margin:0}
+.case p{margin:0;font-size:12.5px;color:var(--dim)}
+
+/* ---------- score ---------- */
+.sc{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.sc .dim{font-size:12px;min-width:150px;color:var(--dim)}
+.sc .bar{flex:1;height:7px;background:#212B38;border-radius:4px;overflow:hidden}
+.sc .bar i{display:block;height:100%;background:var(--gold);border-radius:4px}
+.sc .v{font-family:var(--mono);font-size:11px;color:var(--gold);min-width:30px;text-align:right}
+.verdict{font-family:var(--disp);font-size:18px;font-weight:700}
+
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);padding:8px 10px;border-bottom:1px solid var(--line);font-weight:500}
+td{padding:9px 10px;border-bottom:1px solid #1E2734;color:var(--dim);vertical-align:top}
+td b{color:var(--text)}
+tr:hover td{background:#161D27}
+
+/* ---------- chat ---------- */
+.chat{display:flex;flex-direction:column;gap:12px;max-height:52vh;overflow-y:auto;padding-right:6px;margin-bottom:14px}
+.msg{padding:11px 14px;border-radius:10px;font-size:13px;max-width:88%}
+.msg.u{background:#1E2836;align-self:flex-end}
+.msg.a{background:#111822;border:1px solid var(--line);align-self:flex-start;white-space:pre-wrap}
+.typing{font-family:var(--mono);font-size:11px;color:var(--gold)}
+
+.hidden{display:none!important}
+.divider{height:1px;background:var(--line);margin:20px 0}
+.pill{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:5px;background:#0F151D;border:1px solid var(--line);color:var(--dim)}
+footer.note{margin-top:26px;font-size:11.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:14px;max-width:80ch}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="rail">
+    <div class="brand">PRODUCT CAREER <span>OS</span></div>
+    <div class="brandsub">52-week build · app</div>
+    <div class="navsec">Operate</div>
+    <button class="navbtn on" data-page="dash"><i>◈</i>Mission Control</button>
+    <button class="navbtn" data-page="plan"><i>▤</i>52-Week Plan</button>
+    <button class="navbtn" data-page="cases"><i>◇</i>Case Vault</button>
+    <div class="navsec">Build</div>
+    <button class="navbtn" data-page="studio"><i>⬡</i>Artifact Studio</button>
+    <button class="navbtn" data-page="portfolio"><i>▣</i>Portfolio</button>
+    <div class="navsec">Convert</div>
+    <button class="navbtn" data-page="interview"><i>◎</i>Interview Range</button>
+    <button class="navbtn" data-page="coach"><i>✦</i>Coach</button>
+    <button class="navbtn" data-page="data"><i>⚙</i>Setup &amp; Data</button>
+  </nav>
+  <main class="main" id="main"></main>
+</div>
+<script>
+/* ============ REFERENCE LIBRARY (verified links) ============ */
+const R = {
+  swag:   ['Swag Wala PM','https://www.youtube.com/c/TheSwagWalaPM'],
+  swagFull:['Swag Wala PM','https://www.youtube.com/watch?v=WNdwk-s2GNU'],
+  swagDisc:['Swag Wala PM','https://www.youtube.com/watch?v=CWhwIt-tZWU'],
+  swagFP: ['Swag Wala PM','https://www.youtube.com/watch?v=Z0SZcbbyu9c'],
+  swagSec:['Swag Wala PM','https://www.youtube.com/watch?v=8_hcBBUUvCg'],
+  swagRoad:['Swag Wala PM','https://www.youtube.com/watch?v=pka0R2KnzdA'],
+  swagRoles:['Swag Wala PM','https://www.youtube.com/watch?v=ldjWOb4rAOo'],
+  swagMBA:['Swag Wala PM','https://www.youtube.com/watch?v=qgEyMHXPWUs'],
+  rethink:['Rethink Systems','https://recorded.rethinksystems.in/'],
+  lenny:  ['Lenny\u2019s Podcast','https://www.youtube.com/@LennysPodcast'],
+  lennyN: ['Lenny\u2019s Newsletter','https://www.lennysnewsletter.com/podcast'],
+  aakash: ['Aakash Gupta','https://www.youtube.com/@growproduct'],
+  aakashN:['Product Growth','https://www.news.aakashg.com/'],
+  aakashSite:['Aakash Gupta','https://www.aakashg.com/'],
+  expo:   ['Exponent','https://www.youtube.com/c/ExponentTV/videos'],
+  expoQ:  ['Exponent','https://www.tryexponent.com/blog/top-product-manager-interview-questions'],
+  expoPlan:['Exponent','https://www.tryexponent.com/blog/the-ultimate-pm-interview-study-plan'],
+  expoC:  ['Exponent','https://www.tryexponent.com/courses'],
+  diego:  ['PM Diego Granados','https://www.youtube.com/channel/UCzpDM7pbVBxV1WwjYux0Ixw'],
+  folks:  ['The Product Folks','https://www.theproductfolks.com/learn-product-management'],
+  sql1:   ['DataLemur','https://datalemur.com/sql-tutorial/intro-to-sql'],
+  sql2:   ['DataLemur','https://datalemur.com/sql-tutorial/intermediate-data-science-sql-intro'],
+  sql3:   ['DataLemur','https://datalemur.com/sql-tutorial/advanced-sql-tutorial-intro'],
+  sqlQ:   ['DataLemur','https://datalemur.com/questions'],
+  mode:   ['Mode','https://mode.com/resources/']
+};
+// topical search inside a channel — always resolves, never a dead deep-link
+function sw(q){ return ['Swag Wala PM \u00b7 search','https://www.youtube.com/c/TheSwagWalaPM/search?query='+encodeURIComponent(q)]; }
+function ln(q){ return ['Lenny \u00b7 search','https://www.youtube.com/@LennysPodcast/search?query='+encodeURIComponent(q)]; }
+function ak(q){ return ['Aakash \u00b7 search','https://www.youtube.com/@growproduct/search?query='+encodeURIComponent(q)]; }
+function ex(q){ return ['Exponent \u00b7 search','https://www.youtube.com/c/ExponentTV/search?query='+encodeURIComponent(q)]; }
+
+/* ============ 52-WEEK CURRICULUM ============ */
+const QUARTERS = [
+  {q:1,name:'Foundations, Rebuilt',sub:'Product thinking + the analytics spine you are missing',weeks:'1\u201313'},
+  {q:2,name:'Growth & Experimentation',sub:'Loops, retention, pricing, tests \u2014 the Growth PM core',weeks:'14\u201326'},
+  {q:3,name:'AI & Technical Fluency',sub:'Stack literacy, AI product patterns, shipped prototypes',weeks:'27\u201339'},
+  {q:4,name:'Strategy, Leadership & Landing',sub:'Vision, influence, interview range, offer',weeks:'40\u201352'}
+];
+
+const WEEKS = [
+/* ---------- Q1 ---------- */
+{n:1,q:1,t:'First principles of product thinking',type:'strategy',
+ topics:['Problem space vs solution space \u2014 and why PMs skip the first','First-principles decomposition: strip a product to user, job, constraint, mechanism','Value equation: user value \u00d7 business value \u00d7 feasibility','The "why now" test \u2014 timing as a product argument'],
+ res:[R.swagFull,R.swagFP,sw('first principles')],
+ drill:'Take the Bajaj D2C purchase journey you built and decompose it from first principles. Not "we built an e-commerce site" \u2014 what job was the buyer hiring it for, what constraint made it impossible before, what mechanism did you introduce? Write it as if you were pitching it to a VP Product who has never heard of Bajaj.',
+ artifact:'Problem Space Map \u2014 D2C premium two-wheeler purchase (1 page: job, constraints, mechanism, why-now, value equation)'},
+
+{n:2,q:1,t:'Continuous discovery & the opportunity tree',type:'discovery',
+ topics:['Continuous discovery habits: weekly touchpoints, not quarterly research projects','Opportunity Solution Tree: outcome \u2192 opportunity \u2192 solution \u2192 experiment','Interview technique: past behaviour over hypothetical intent','Assumption mapping: desirability, viability, feasibility, usability'],
+ res:[R.swagDisc,ln('continuous discovery'),R.folks],
+ drill:'Build an Opportunity Solution Tree for one outcome: "increase online-to-showroom conversion for Chetak". Force yourself to 6+ opportunities before any solution appears. Mark which opportunities you have evidence for and which are guesses.',
+ artifact:'Opportunity Solution Tree + assumption map (annotated, evidence-flagged)'},
+
+{n:3,q:1,t:'Customer interviews & research synthesis',type:'discovery',
+ topics:['Interview script design: opening, story-mining, laddering, closing','Avoiding leading questions and confirmation bias','Synthesis: affinity mapping \u2192 insight statements \u2192 opportunity backlog','Sample size sanity for qualitative work'],
+ res:[sw('user research'),ln('customer interviews'),R.folks],
+ drill:'Run 5 real conversations \u2014 EV-curious buyers, a dealer sales exec, someone who abandoned an online booking. 25 minutes each. Then synthesise: what did you believe before, and which belief died?',
+ artifact:'Research synthesis note: 5 interviews \u2192 3 insight statements \u2192 2 killed assumptions'},
+
+{n:4,q:1,t:'Metric trees, North Star and counter-metrics',type:'metrics',
+ topics:['North Star selection: value exchanged, not vanity volume','Metric tree: NSM \u2192 input metrics \u2192 team-controllable levers','Counter-metrics and guardrails \u2014 what breaks if you win','Leading vs lagging indicators in a long-consideration purchase'],
+ res:[ak('north star metric'),ln('metrics'),R.aakashN],
+ drill:'Design a metric tree for a D2C EV funnel where purchase cycles run 30\u201390 days. Lagging revenue is useless as a weekly signal \u2014 what are the input metrics you would actually run a sprint against?',
+ artifact:'Metric Tree v1 \u2014 NSM, 4 input metrics, 2 counter-metrics, weekly reporting spec'},
+
+{n:5,q:1,t:'SQL foundations \u2014 stop asking analysts',type:'sql',
+ topics:['SELECT / WHERE / ORDER BY / LIMIT and reading a schema','Aggregation: GROUP BY, HAVING, COUNT DISTINCT traps','JOINs \u2014 inner vs left, and the fan-out bug that inflates every metric','NULL handling: why your conversion rate is quietly wrong'],
+ res:[R.sql1,R.sqlQ,R.mode],
+ drill:'Work through the intro tutorial end to end, then solve 10 easy questions. Every query you write, write one sentence above it stating the product question it answers.',
+ artifact:'SQL Notebook Part 1 \u2014 10 solved queries, each with the product question it answers'},
+
+{n:6,q:1,t:'Intermediate SQL \u2014 cohorts and windows',type:'sql',
+ topics:['CTEs for readable multi-step logic','Window functions: ROW_NUMBER, LAG, running totals','Date arithmetic, cohort bucketing, first-touch vs last-touch','Self-joins for funnel step sequencing'],
+ res:[R.sql2,R.sqlQ,R.mode],
+ drill:'Write a query that produces a weekly retention cohort table from a raw events table. Then break it deliberately \u2014 introduce a fan-out bug \u2014 and note how the numbers move. That is the skill: knowing when a dashboard is lying.',
+ artifact:'SQL Notebook Part 2 \u2014 cohort retention query + funnel step query, annotated'},
+
+{n:7,q:1,t:'Product analytics: funnels, cohorts, retention curves',type:'metrics',
+ topics:['Reading a retention curve: does it flatten, and where','Funnel analysis vs step-conversion analysis \u2014 different questions','Segment-first thinking: the average user does not exist','GA4 for a considered purchase: sessions, events, attribution limits'],
+ res:[ak('retention'),ln('retention curve'),sw('product analytics')],
+ drill:'Pull real GA4 data from your own property. Build the funnel, segment by traffic source and city, and find one segment where the pattern inverts the aggregate. That inversion is your insight.',
+ artifact:'Funnel Teardown \u2014 real GA4 data, 3 segments, 1 counter-intuitive finding, 2 recommended experiments'},
+
+{n:8,q:1,t:'Instrumentation & event taxonomy',type:'metrics',
+ topics:['Event naming conventions: object-action, properties over event sprawl','Tracking plan as a PM deliverable, not an engineering afterthought','Identity resolution: anonymous \u2192 lead \u2192 customer stitching','Data quality debt \u2014 the silent killer of growth teams'],
+ res:[sw('analytics'),ak('instrumentation'),R.mode],
+ drill:'Write the tracking plan you wish you had had on day one of the D2C build. Include the identity-stitching logic for the online-to-dealer handoff \u2014 that is the hard part and it is your differentiator.',
+ artifact:'Event Tracking Plan \u2014 25 events, properties, identity model, QA checklist'},
+
+{n:9,q:1,t:'PRDs that actually ship',type:'prd',
+ topics:['Problem statement, success metrics, non-goals \u2014 in that order','Writing requirements engineers do not have to interpret','Edge cases, failure states, rollout and rollback plans','The one-page PRD vs the full spec \u2014 when each is correct'],
+ res:[sw('PRD'),ln('writing product specs'),R.aakashN],
+ drill:'Write a PRD for a feature you genuinely wish existed on your current product. Include a "what we are deliberately not doing" section \u2014 senior PMs are judged on what they cut.',
+ artifact:'PRD v1 \u2014 problem, metrics, non-goals, requirements, edge cases, rollout'},
+
+{n:10,q:1,t:'Prioritisation & roadmap defence',type:'strategy',
+ topics:['RICE, ICE, weighted scoring \u2014 and their failure modes','Opportunity cost framing for exec conversations','Sequencing: dependency chains and compounding bets','Now / Next / Later vs date-committed roadmaps'],
+ res:[sw('prioritization'),ln('roadmap'),R.aakashN],
+ drill:'Build a 2-quarter roadmap for your current product and then write the rejection memo: the three highest-pressure stakeholder requests you are not doing, and the reasoning. Practise saying no in writing.',
+ artifact:'Roadmap + Rejection Memo (the memo is the portfolio piece, not the roadmap)'},
+
+{n:11,q:1,t:'Product sense & app teardowns',type:'teardown',
+ topics:['Teardown structure: user \u2192 job \u2192 journey \u2192 friction \u2192 hypothesis \u2192 metric','Judging design intent, not aesthetics','Business model archaeology: how does this product make money','Writing a teardown that reads as strategy, not as a bug list'],
+ res:[R.folks,sw('teardown'),R.diego],
+ drill:'Tear down one Indian consumer product outside automotive \u2014 Zepto, Cult.fit, MakeMyTrip, or Ather. 90 minutes, no more. End with one experiment you would run in week one if you joined that team.',
+ artifact:'Teardown #1 \u2014 publishable, 800\u20131000 words + annotated screens'},
+
+{n:12,q:1,t:'Exec communication & narrative',type:'strategy',
+ topics:['BLUF: lead with the decision you want','Structuring a 5-slide exec narrative (situation, complication, options, recommendation, ask)','Handling the hostile question without losing the room','Writing the update nobody has to chase you for'],
+ res:[R.swagSec,ln('storytelling'),sw('stakeholder management')],
+ drill:'Take your Week 7 funnel finding and turn it into a 5-slide narrative that ends in a specific ask (headcount, budget, or a decision). Time yourself presenting it in 4 minutes.',
+ artifact:'Exec Narrative Deck \u2014 5 slides + speaker notes'},
+
+{n:13,q:1,t:'Q1 review \u2014 positioning reset',type:'resume',
+ topics:['Audit: which artifacts are portfolio-grade, which are practice','Resume rewrite against the senior-PM bar (scope, ambiguity, judgment)','LinkedIn: headline, About, featured artifacts','Publish artifact #1 publicly and watch what happens'],
+ res:[R.swagRoad,R.aakashSite,R.expoPlan],
+ drill:'Run your resume through the Artifact Studio with rubric = Resume. Then rewrite every bullet that scores below 4. Publish your best teardown or funnel analysis on LinkedIn with a real point of view in the post body.',
+ artifact:'Resume v2 + LinkedIn rewrite + first public post'},
+
+/* ---------- Q2 ---------- */
+{n:14,q:2,t:'Growth loops vs funnels',type:'growth',
+ topics:['Why funnels leak and loops compound','Loop types: viral, content, paid, sales-led','Mapping input \u2192 action \u2192 output \u2192 reinvestment','Loop maths: cycle time, conversion, amplification'],
+ res:[ak('growth loops'),ln('growth loops'),R.aakashN],
+ drill:'Draw the growth loop for a considered-purchase category. Two-wheelers do not go viral \u2014 so what is the actual loop? (Hint: look at ownership content, service touchpoints, referral in dealer catchments.)',
+ artifact:'Growth Loop Teardown \u2014 loop diagram, cycle-time maths, 3 amplification levers'},
+
+{n:15,q:2,t:'Acquisition & channel economics',type:'growth',
+ topics:['CAC by channel, blended vs marginal CAC','LTV modelling when purchase is one-off + service annuity','Payback period and why finance cares more than growth does','Channel saturation curves and the diminishing-returns point'],
+ res:[ak('CAC LTV'),R.aakashN,ln('paid acquisition')],
+ drill:'Build a real channel economics model in a sheet: 5 channels, CAC, conversion, contribution margin, payback. Use your own 20% CAC reduction as the base case and show what you would do with the next 20%.',
+ artifact:'Channel Economics Model (spreadsheet + 1-page read-out)'},
+
+{n:16,q:2,t:'Activation & onboarding',type:'growth',
+ topics:['Defining the activation moment with data, not opinion','Time-to-value compression tactics','Aha-moment analysis: correlation \u2192 causal test','Onboarding for high-consideration vs high-frequency products'],
+ res:[ak('activation'),ln('onboarding'),sw('activation')],
+ drill:'Define the activation event for a D2C vehicle purchase journey. Test drive booked? Finance pre-approval? Prove your choice with retention/conversion differential, do not assert it.',
+ artifact:'Activation Definition Memo + onboarding redesign spec'},
+
+{n:17,q:2,t:'Retention & lifecycle engagement',type:'growth',
+ topics:['Retention curve shapes and the flattening test','Habit loops, resurrection campaigns, dormancy triggers','Lifecycle messaging architecture across WhatsApp / app / email','Retention in ownership products: service, accessories, community'],
+ res:[ak('retention'),ln('retention'),sw('engagement')],
+ drill:'Reframe your WhatsApp/chatbot work. You have been positioning it as acquisition. Rebuild it as a lifecycle engagement architecture \u2014 stages, triggers, content, and the retention metric each stage moves. This single reframe changes how a Growth PM interviewer reads your resume.',
+ artifact:'Lifecycle Engagement Architecture \u2014 stage map, trigger logic, metric per stage'},
+
+{n:18,q:2,t:'Monetisation & pricing',type:'growth',
+ topics:['Value metric selection \u2014 what you charge for','Willingness-to-pay research: Van Westendorp, conjoint basics','Packaging, bundling, and the good/better/best trap','Financing and EMI as a pricing lever in Indian consumer purchases'],
+ res:[ak('pricing'),ln('pricing strategy'),R.aakashN],
+ drill:'Design a pricing and packaging experiment for accessories/service plans attached to a vehicle purchase. State the value metric, the WTP evidence you would gather, and the test design.',
+ artifact:'Pricing & Packaging Proposal with WTP research plan'},
+
+{n:19,q:2,t:'Experiment design',type:'metrics',
+ topics:['Hypothesis writing: because / we believe / we will know','Minimum detectable effect and sample size \u2014 before you launch','Randomisation units and interference','When not to A/B test: low traffic, long cycles, network effects'],
+ res:[ak('experimentation'),ln('experimentation'),sw('A/B testing')],
+ drill:'Design three experiments from your Week 7 funnel teardown. For each: hypothesis, primary metric, MDE, required sample, duration, guardrails, and the decision rule you will commit to before seeing data.',
+ artifact:'Experiment Design Docs \u00d7 3 with pre-committed decision rules'},
+
+{n:20,q:2,t:'Statistics for PMs',type:'metrics',
+ topics:['p-values, confidence intervals and what they do not mean','Statistical vs practical significance','Novelty and primacy effects, peeking, multiple comparisons','Sequential testing and Bayesian alternatives \u2014 conceptually'],
+ res:[ex('statistics product manager'),ak('statistics'),R.mode],
+ drill:'Take a past VWO test you ran. Recompute whether it was actually powered to detect the effect you claimed. If it was not, write the honest version of the result \u2014 this is exactly the self-audit senior interviewers probe for.',
+ artifact:'Experiment Post-Mortem \u2014 honest re-analysis of a real past test'},
+
+{n:21,q:2,t:'Test analysis & decision-making',type:'metrics',
+ topics:['Reading results by segment without p-hacking','Ship / kill / iterate frameworks','Long-run holdouts and cumulative impact accounting','Communicating a flat result without losing credibility'],
+ res:[ak('ab test analysis'),ln('experimentation'),R.sqlQ],
+ drill:'Write the analysis memo for a flat test. Recommend a decision anyway. The ability to make a call on ambiguous data is the single clearest senior signal in an interview.',
+ artifact:'Test Analysis Memo \u2014 flat result, clear recommendation'},
+
+{n:22,q:2,t:'CRO & landing systems',type:'growth',
+ topics:['Page-level hypothesis stacks vs one-off tests','Message-market fit: matching ad intent to landing promise','Form friction, trust signals, and the mobile-first reality of India','Speed as a conversion feature \u2014 Core Web Vitals'],
+ res:[sw('conversion'),ak('conversion rate optimization'),ln('landing page')],
+ drill:'Audit three competitor landing pages in EV/mobility. Score each against a 10-point CRO rubric you define. Then propose the test roadmap for your own page.',
+ artifact:'CRO Audit + 90-day test roadmap (publishable)'},
+
+{n:23,q:2,t:'Lifecycle CRM & conversational commerce',type:'growth',
+ topics:['WhatsApp Business API: template economics, opt-in, session windows','Segmentation and frequency capping without fatigue','Conversational commerce patterns: bot \u2192 human handoff design','Attribution for messaging channels'],
+ res:[sw('whatsapp'),ak('lifecycle marketing'),R.aakashN],
+ drill:'Cost out the WhatsApp architecture you built: template costs, session costs, incremental conversion, net contribution. Very few PMs can defend the unit economics of a channel they built. Be one who can.',
+ artifact:'Conversational Commerce Unit Economics + architecture doc'},
+
+{n:24,q:2,t:'Omnichannel & phygital systems',type:'strategy',
+ topics:['Online-to-offline handoff: lead integrity, SLA, attribution disputes','Dealer/partner incentive design \u2014 the real blocker in phygital','Inventory and availability as product constraints','Measuring a journey that crosses systems'],
+ res:[sw('omnichannel'),ln('marketplaces'),R.folks],
+ drill:'Write the case study of the 300+ hyperlocal partner rollout as a systems problem: what incentive, data, and product changes made adoption happen. Include what failed first.',
+ artifact:'Phygital Rollout Case Study \u2014 your flagship differentiated portfolio piece'},
+
+{n:25,q:2,t:'GTM & launch',type:'strategy',
+ topics:['Launch tiers and readiness criteria','Positioning and messaging hierarchy','Beta \u2192 phased rollout \u2192 GA with kill criteria','Post-launch instrumentation and the 30-day review'],
+ res:[sw('go to market'),ln('go to market'),R.aakashN],
+ drill:'Build a full GTM plan for a hypothetical EV variant launch in three Indian metros. Include the kill criteria \u2014 the conditions under which you would pull the launch.',
+ artifact:'GTM Plan with staged rollout and kill criteria'},
+
+{n:26,q:2,t:'Q2 review \u2014 the Growth PM story',type:'resume',
+ topics:['Consolidate: do you now have a growth narrative with numbers and mechanism','Portfolio audit: 5 artifacts should exist by now','Rewriting experience bullets from "ran" to "diagnosed \u2192 designed \u2192 moved"','Second public post + first warm outreach round'],
+ res:[R.aakashSite,R.expoPlan,R.swagRoad],
+ drill:'Rerun your resume through the Studio. Then send five warm outreach messages to Growth PMs in Bengaluru with your best artifact attached \u2014 not a request for a referral, a request for critique. It converts far better.',
+ artifact:'Resume v3 + outreach batch #1 (5 sent, logged)'},
+
+/* ---------- Q3 ---------- */
+{n:27,q:3,t:'How the stack actually works',type:'technical',
+ topics:['Client, server, database, cache \u2014 the request lifecycle','Frontend vs backend responsibility boundaries','Environments, releases, feature flags','Reading a status page and a post-mortem'],
+ res:[ex('system design for product managers'),sw('technical product manager'),R.diego],
+ drill:'Draw the architecture of the D2C platform you own \u2014 every hop from a user tapping "Book now" to the dealer receiving the lead. Then check it with an engineer and mark what you got wrong.',
+ artifact:'Architecture Diagram + engineer-validated correction notes'},
+
+{n:28,q:3,t:'APIs, webhooks and integrations',type:'technical',
+ topics:['REST verbs, status codes, payload shape','Auth: API keys, OAuth, tokens','Webhooks vs polling; idempotency and retries','Reading API docs well enough to scope integration work'],
+ res:[ex('API product manager'),sw('API'),R.folks],
+ drill:'Use a public API and make 10 real calls (Postman or curl). Then write the integration spec for a hypothetical dealer-CRM sync including failure handling.',
+ artifact:'Integration Spec with error/retry design'},
+
+{n:29,q:3,t:'System design for PMs',type:'technical',
+ topics:['Scale vocabulary: QPS, latency, throughput, p95','Queues, async processing, eventual consistency','Caching strategy and invalidation trade-offs','Designing for degradation, not perfection'],
+ res:[ex('system design interview'),R.diego,sw('system design')],
+ drill:'Design a booking system that stays correct when two users reserve the last test-ride slot in the same second. Write the trade-offs, not the code.',
+ artifact:'System Design Note \u2014 concurrency, degradation, trade-offs'},
+
+{n:30,q:3,t:'Data infrastructure literacy',type:'technical',
+ topics:['Event pipeline \u2192 warehouse \u2192 BI layer','Batch vs streaming; freshness vs cost','Data modelling basics: facts, dimensions, grain','Why your dashboards disagree with each other'],
+ res:[R.mode,ak('data'),ex('data product manager')],
+ drill:'Map the data flow behind one dashboard you use weekly. Identify every point where a definition could drift, then write the metric definitions doc that would prevent it.',
+ artifact:'Metric Definitions Doc + data flow map'},
+
+{n:31,q:3,t:'AI fundamentals for PMs',type:'ai',
+ topics:['Classical ML vs LLMs \u2014 when each is the right tool','Training, inference, embeddings, context windows','Model selection trade-offs: capability, latency, cost','Where AI genuinely beats a rules engine, and where it does not'],
+ res:[ak('AI product management'),sw('AI PM'),ln('AI product')],
+ drill:'List 10 places AI could enter your current product. Then kill 8 of them with a one-line reason each. The judgment to say "a rules engine is enough here" is what separates AI PMs from AI enthusiasts.',
+ artifact:'AI Opportunity Screen \u2014 10 ideas, 8 killed with reasoning, 2 specced'},
+
+{n:32,q:3,t:'LLM product patterns',type:'ai',
+ topics:['RAG: retrieval, chunking, grounding, citations','Agents and tool use \u2014 and their failure modes','Prompt chains, structured output, function calling','Human-in-the-loop design and escalation paths'],
+ res:[ak('RAG agents'),ln('AI agents'),R.rethink],
+ drill:'Spec an AI assistant for vehicle buyers: what it retrieves, what it must never answer, how it escalates to a human dealer, and how you measure whether it helped.',
+ artifact:'AI Assistant PRD \u2014 grounding, guardrails, escalation, success metrics'},
+
+{n:33,q:3,t:'Build it \u2014 AI prototyping week',type:'ai',
+ topics:['Prompt engineering: role, context, constraints, output schema','No-code / low-code AI prototyping','Shipping something clickable, not a slide about something clickable','Demo craft: 90 seconds, one insight'],
+ res:[R.rethink,ak('vibe coding'),sw('AI build')],
+ drill:'Build a working prototype this week. Not a mock \u2014 something a person can open and use. A buyer-intent qualifier, a spec-comparison bot, a lead-scoring helper. Ugly is fine; working is not optional.',
+ artifact:'Working AI prototype (live link) + 90-second demo video'},
+
+{n:34,q:3,t:'AI evaluation & quality',type:'ai',
+ topics:['Offline eval sets and golden datasets','LLM-as-judge, human review, and their biases','Hallucination, refusal, and safety guardrails','Regression testing when the model changes under you'],
+ res:[ak('AI evals'),ln('evals'),R.rethink],
+ drill:'Write the eval plan for your Week 33 prototype: 20 test cases, pass criteria, and the failure taxonomy. Run it. Report honestly what percentage failed.',
+ artifact:'Eval Plan + results with failure taxonomy'},
+
+{n:35,q:3,t:'AI UX & trust',type:'ai',
+ topics:['Confidence display, citations, and graceful uncertainty','Undo, override, and user control patterns','Latency perception and streaming UX','Consent and disclosure for AI-generated content'],
+ res:[ln('AI UX'),ak('AI UX'),R.folks],
+ drill:'Redesign one screen of your prototype specifically for trust. Show what changes when the model is unsure. Most AI products fail here, not on model quality.',
+ artifact:'AI Trust UX spec + before/after screens'},
+
+{n:36,q:3,t:'Personalisation & recommendations',type:'ai',
+ topics:['Collaborative vs content-based filtering, cold start','Ranking objectives and the diversity trade-off','Feedback loops and popularity bias','Personalisation in low-frequency, high-value purchases'],
+ res:[ak('recommendation systems'),ex('recommendation system design'),ln('personalization')],
+ drill:'Design a recommendation approach for a category where a user buys once every five years. Standard collaborative filtering fails \u2014 what replaces it?',
+ artifact:'Personalisation Strategy Note for low-frequency categories'},
+
+{n:37,q:3,t:'AI unit economics',type:'ai',
+ topics:['Cost per query: tokens, model tier, caching','Latency vs quality vs cost triangle','Routing: cheap model first, escalate on failure','Building the business case for an AI feature'],
+ res:[ak('AI cost'),R.aakashN,ln('AI economics')],
+ drill:'Build the cost model for your prototype at 10K, 100K and 1M monthly queries. At what volume does it stop making sense, and what would you change first?',
+ artifact:'AI Cost Model + scaling decision memo'},
+
+{n:38,q:3,t:'Responsible AI & Indian data regulation',type:'ai',
+ topics:['Bias, fairness and evaluation across user segments','DPDP Act 2023: consent, purpose limitation, data principal rights','PII handling in conversational products','Documentation: model cards and decision logs'],
+ res:[ln('AI ethics'),ak('AI governance'),R.folks],
+ drill:'Write the data and consent design for your prototype under DPDP requirements. Any Indian consumer product you join will need this and almost no PM candidate can speak to it.',
+ artifact:'Responsible AI & Consent Design Note'},
+
+{n:39,q:3,t:'Q3 review \u2014 the AI-fluent PM',type:'resume',
+ topics:['Portfolio audit: 8\u20139 artifacts, one of them working software','Positioning update: 0-to-1 builder + growth + AI-fluent','Publishing the prototype and demo publicly','Targeting: shortlist 25 companies with named PM leaders'],
+ res:[R.expoQ,R.aakashSite,R.swagRoles],
+ drill:'Publish the prototype and the eval results together \u2014 including the failures. The honesty is the differentiator; everyone else posts the happy path.',
+ artifact:'Resume v4 + public prototype post + 25-company target list'},
+
+/* ---------- Q4 ---------- */
+{n:40,q:4,t:'Product strategy & vision',type:'strategy',
+ topics:['Where to play / how to win, applied to a product line','Vision \u2192 strategy \u2192 roadmap \u2192 OKR chain integrity','Strategic bets vs incremental optimisation','Writing a vision doc people can act on'],
+ res:[ln('product strategy'),sw('product strategy'),R.aakashN],
+ drill:'Write the 3-year product strategy for a company you want to join, from public information only. This doubles as interview preparation and as outreach material.',
+ artifact:'3-Year Product Strategy Memo for a target company'},
+
+{n:41,q:4,t:'Market & competitive analysis',type:'strategy',
+ topics:['TAM/SAM/SOM done honestly, bottom-up','Competitive teardown: positioning, moat, roadmap inference','Reading investor decks, earnings calls and DRHPs','Identifying where a market is structurally about to shift'],
+ res:[ak('market analysis'),ln('competitive strategy'),R.folks],
+ drill:'Analyse the Indian EV two-wheeler market: players, unit economics, structural constraints, and the shift you believe happens next. Take a real position.',
+ artifact:'Market Analysis with a defended prediction'},
+
+{n:42,q:4,t:'Business & P&L literacy',type:'strategy',
+ topics:['Contribution margin, gross margin, burn, runway','Unit economics for a hardware + digital hybrid','Reading a P&L and locating the PM-controllable lines','Making the financial case for a product investment'],
+ res:[ln('finance for product managers'),ak('unit economics'),R.folks],
+ drill:'Build the business case for one initiative on your roadmap: investment, expected return, sensitivity analysis, and the assumption most likely to break it.',
+ artifact:'Business Case with sensitivity analysis'},
+
+{n:43,q:4,t:'Influence without authority',type:'leadership',
+ topics:['Stakeholder mapping: power, interest, and hidden objections','Pre-wiring decisions before the meeting','Managing up: what leaders actually want in an update','Conflict: disagree and commit, and when not to commit'],
+ res:[R.swagSec,ln('stakeholder management'),sw('stakeholder')],
+ drill:'Write the story of the hardest stakeholder conflict you have navigated at Bajaj \u2014 structured as situation, tension, your specific move, outcome, and what you would do differently. This becomes an interview answer you will use ten times.',
+ artifact:'Leadership Story Bank \u2014 entry 1 of 8'},
+
+{n:44,q:4,t:'Leading teams and mentoring',type:'leadership',
+ topics:['Running a squad without direct reports','Coaching junior PMs and giving hard feedback','Hiring loops: what you screen for in a PM','Building team rituals that survive pressure'],
+ res:[ln('product leadership'),sw('product leader'),R.expoC],
+ drill:'Write the remaining seven leadership stories: failure, conflict with engineering, killed project, data-contradicted-you, ambiguous mandate, influencing a senior leader, mentoring someone.',
+ artifact:'Leadership Story Bank \u2014 complete (8 stories, STAR-L format)'},
+
+{n:45,q:4,t:'Product operations at scale',type:'leadership',
+ topics:['Intake, triage and the request firehose','Documentation systems that stay alive','Cross-functional operating cadence','Scaling yourself: what to delegate first'],
+ res:[ln('product operations'),R.folks,sw('product process')],
+ drill:'Design the operating cadence you would install in your first 90 days as a Senior PM at a Series B startup. Specific meetings, specific artifacts, specific owners.',
+ artifact:'First-90-Days Operating Plan (reusable in final interviews)'},
+
+{n:46,q:4,t:'Interview: product sense',type:'interview',
+ topics:['Clarify \u2192 user segments \u2192 pain points \u2192 solutions \u2192 prioritise \u2192 metrics','Choosing a segment and defending it','Depth over breadth: three good ideas beat twelve shallow ones','Handling "now design it for the opposite user"'],
+ res:[R.expoQ,ex('product sense interview'),R.diego],
+ drill:'Do five timed product-sense questions, 30 minutes each, recorded. Watch two of the recordings back. You will hate it; it is the fastest improvement mechanism available.',
+ artifact:'5 recorded product-sense answers + self-scored rubric'},
+
+{n:47,q:4,t:'Interview: metrics, analytics & SQL',type:'interview',
+ topics:['Metric definition under ambiguity','Root-cause diagnosis: the drop-in-metric question tree','Trade-off questions between conflicting metrics','Live SQL rounds \u2014 speaking while querying'],
+ res:[R.expoQ,R.sqlQ,ex('analytical interview product manager')],
+ drill:'Solve 20 SQL questions under timer plus 5 metric-diagnosis cases. Build your own reusable diagnosis tree: segment, time, channel, platform, funnel step, external.',
+ artifact:'Metric Diagnosis Playbook + 20 timed SQL solutions'},
+
+{n:48,q:4,t:'Interview: execution & root cause',type:'interview',
+ topics:['Estimation and back-of-envelope discipline','Trade-off under constraint: half the time, half the team','Prioritisation questions with hidden second-order effects','Structured guessing when you genuinely do not know'],
+ res:[R.expoQ,ex('execution interview'),R.diego],
+ drill:'Five execution cases, timed. Record and score against the rubric you built in Week 46.',
+ artifact:'5 execution case write-ups (portfolio-eligible)'},
+
+{n:49,q:4,t:'Interview: behavioural & leadership',type:'interview',
+ topics:['STAR-L: the learning is what separates senior from mid','Story selection: matching the story to the probe behind the question','Owning failure without self-destruction','Salary and scope questions in the behavioural round'],
+ res:[R.swagSec,ex('behavioral interview'),R.expoQ],
+ drill:'Rehearse all eight stories aloud, timed to 2.5 minutes each. Then have someone interrupt you mid-story with a follow-up probe \u2014 that is where real interviews go.',
+ artifact:'Story Bank v2 \u2014 rehearsed, timed, probe-tested'},
+
+{n:50,q:4,t:'Interview: AI PM rounds & take-homes',type:'interview',
+ topics:['AI product sense: capability, data, eval, guardrail','Take-home assignments: scope, structure, and time-boxing','Presenting a take-home to a panel','Questions to ask that signal seniority'],
+ res:[R.expoQ,ak('AI PM interview'),R.rethink],
+ drill:'Complete one full take-home in 6 hours as if it were real, using your Week 33 prototype as the working component. Then present it to someone and take questions.',
+ artifact:'Completed take-home + presentation deck'},
+
+{n:51,q:4,t:'Offer strategy & negotiation',type:'leadership',
+ topics:['Levelling: how L-bands and titles map to scope in Indian startups','Compensation structure: fixed, variable, ESOP strike and vesting','Negotiating with competing offers \u2014 and without them','Evaluating equity honestly: dilution, exit scenarios, liquidity'],
+ res:[ln('negotiation'),ak('compensation'),R.swagRoles],
+ drill:'Write your negotiation script: your number, your walk-away, your three non-salary asks, and your response to "what are you currently making". Rehearse it aloud until it stops feeling rude.',
+ artifact:'Negotiation Script + levelling research on 10 target companies'},
+
+{n:52,q:4,t:'Close-out \u2014 the next role, run properly',type:'leadership',
+ topics:['First-90-days plan tailored to the offer you accept','What to renegotiate at 6 months (scope, not salary)','Keeping the portfolio and publishing habit alive','Choosing the next 12-month capability bet'],
+ res:[ln('first 90 days'),R.swagRoad,R.aakashSite],
+ drill:'Write your own performance review, dated one year forward. What did you ship, what scope did you own, what did you become known for? Then work backwards into the next plan.',
+ artifact:'Year-2 Career Thesis + first-90-days plan for the new role'}
+];
+
+/* ============ RUBRICS ============ */
+const RUBRICS = {
+  strategy:{label:'Strategy / Vision Memo',dims:['Problem framing','Insight quality','Strategic clarity','Trade-off reasoning','Evidence & numbers','Executive writing']},
+  discovery:{label:'Discovery / Research',dims:['Question quality','Bias avoidance','Synthesis rigour','Insight vs observation','Actionability','Clarity']},
+  metrics:{label:'Metrics / Analysis',dims:['Metric selection','Analytical rigour','Segmentation depth','Counter-metric thinking','Recommendation strength','Communication']},
+  sql:{label:'SQL / Data Work',dims:['Correctness','Query readability','Product framing','Edge-case handling','Insight extracted','Documentation']},
+  prd:{label:'PRD / Spec',dims:['Problem statement','Success metrics','Requirement precision','Non-goals & scope cuts','Edge cases & rollout','Readability for engineers']},
+  teardown:{label:'Teardown',dims:['User & job clarity','Journey rigour','Friction diagnosis','Hypothesis quality','Business model grasp','Point of view']},
+  growth:{label:'Growth Artefact',dims:['Loop/funnel logic','Economic reasoning','Experiment design','Segment thinking','Impact sizing','Narrative']},
+  technical:{label:'Technical Artefact',dims:['System accuracy','Trade-off awareness','Failure-mode thinking','Vocabulary precision','Scoping realism','Clarity for engineers']},
+  ai:{label:'AI Product Artefact',dims:['Capability fit','Data & grounding','Eval design','Guardrails & trust','Unit economics','Product judgment']},
+  leadership:{label:'Leadership Story / Plan',dims:['Situation stakes','Your specific action','Influence mechanism','Outcome evidence','Learning depth','Seniority signal']},
+  interview:{label:'Interview Answer',dims:['Structure','Clarification quality','Depth of reasoning','Prioritisation','Metrics closure','Confidence & concision']},
+  resume:{label:'Resume / LinkedIn',dims:['Scope signal','Ambiguity & judgment shown','Quantified outcome','Mechanism (how, not what)','Seniority language','Formatting discipline']},
+  case:{label:'Case Answer',dims:['Framing & assumptions','Structure','Depth of analysis','Prioritisation & trade-offs','Metrics & validation','Communication']}
+};
+
+/* ============ CASE VAULT ============ */
+const CASES = [
+{id:'c1',title:'The 30-day funnel that quietly broke',domain:'Analytics',diff:'Core',week:7,type:'metrics',
+ context:'A D2C vehicle booking platform sees online bookings drop 22% month-over-month. Traffic is flat. Ad spend is flat. The drop is concentrated in three cities but the aggregate dashboard shows a smooth decline. Test-ride bookings are up 6% in the same period.',
+ prompt:'Diagnose the drop. Build the full diagnosis tree before proposing any fix, state what data you would pull in what order, and name the three most likely root causes ranked by prior probability. Then propose the smallest intervention that would confirm or kill your leading hypothesis.',
+ deliver:'A diagnosis memo with: hypothesis tree, data pull sequence (with the SQL you would write), ranked root causes, and a confirmation experiment.',
+ signal:'Interviewers are watching whether you segment before you theorise, and whether you notice that the test-ride increase may mean substitution rather than loss.'},
+
+{id:'c2',title:'Growth loop for a five-year purchase cycle',domain:'Growth',diff:'Core',week:14,type:'growth',
+ context:'You own growth for an EV two-wheeler brand. Customers buy once every 5\u20137 years. Referral programmes underperform. Paid acquisition CAC has risen 40% in 18 months. Leadership wants a "growth loop" and you suspect the honest answer is that a classic viral loop does not exist here.',
+ prompt:'Design a growth system for a low-frequency, high-consideration purchase. Identify the actual compounding mechanism available to you \u2014 content, ownership community, service annuity, dealer catchment density, or something else. Model the loop maths and state the cycle time.',
+ deliver:'Loop diagram, cycle-time and amplification maths, three levers ranked by leverage, and a 2-quarter test plan.',
+ signal:'The senior signal is refusing the fashionable answer. Saying "a viral loop is the wrong model here, and here is the right one" scores far higher than drawing a loop that cannot work.'},
+
+{id:'c3',title:'Activation, when the product is a physical object',domain:'Growth',diff:'Core',week:16,type:'growth',
+ context:'Users browse, configure, and pay a booking amount online \u2014 then wait 3\u20136 weeks for delivery through a dealer. Cancellation in that window runs at 18%. Nobody owns the waiting period.',
+ prompt:'Define the activation moment for this journey and prove your definition with a data test rather than asserting it. Then design the waiting-period product experience to cut cancellations.',
+ deliver:'Activation definition memo with proof methodology, plus a lifecycle spec for the delivery-wait window with triggers and metrics.',
+ signal:'Watch for the trap: reducing cancellation by making cancellation harder. Interviewers probe for whether you solve the anxiety or suppress the symptom.'},
+
+{id:'c4',title:'Reframing a messaging channel as retention',domain:'Lifecycle',diff:'Core',week:17,type:'growth',
+ context:'You built a WhatsApp and chatbot engagement layer that is currently measured purely on leads generated. The CFO sees it as a marketing cost line. You believe its real value sits post-purchase: service reminders, accessory attach, referral prompts, community.',
+ prompt:'Rebuild the case for this channel as lifecycle infrastructure. Map stages, triggers, and the metric each stage moves. Then defend the unit economics \u2014 template costs, session costs, incremental margin.',
+ deliver:'Lifecycle architecture map + unit economics model + the one-page memo you would send the CFO.',
+ signal:'This is your highest-leverage personal case. It converts existing work you already own into a Growth PM narrative with a defensible P&L argument.'},
+
+{id:'c5',title:'The phygital handoff nobody trusts',domain:'Omnichannel',diff:'Advanced',week:24,type:'strategy',
+ context:'Digital leads are passed to 300+ local partners. Partners claim lead quality is poor. Digital claims partners do not follow up. Both have dashboards. The dashboards disagree. Attribution is contested and the incentive structure rewards partners for offline walk-ins only.',
+ prompt:'Design the system that resolves this \u2014 product, data, and incentive changes together. Specify the SLA model, the lead-integrity instrumentation, and the incentive redesign. State what you would sequence first and why.',
+ deliver:'Systems memo: current-state diagnosis, target-state design, incentive model, instrumentation spec, 90-day sequencing.',
+ signal:'Most candidates solve this as a product problem only. The seniority signal is recognising it is primarily an incentive-design problem with a product wrapper.'},
+
+{id:'c6',title:'A flat A/B test and a waiting VP',domain:'Experimentation',diff:'Core',week:21,type:'metrics',
+ context:'A 6-week redesign test on the configurator page returns a statistically flat result on primary conversion. Engineering spent a quarter on it. Two secondary metrics moved positively. One guardrail metric (page load) degraded 300ms. The VP wants a ship decision tomorrow.',
+ prompt:'Make the call and defend it. Address: whether the test was adequately powered, whether the secondary metrics justify shipping, how you handle the guardrail regression, and what you tell the team who built it.',
+ deliver:'A one-page decision memo with recommendation, reasoning, and the communication plan for the team.',
+ signal:'Interviewers are testing whether you can decide under ambiguity without either false confidence or paralysis \u2014 and whether you check power before interpreting a null result.'},
+
+{id:'c7',title:'Scoping the AI assistant that should not answer everything',domain:'AI',diff:'Advanced',week:32,type:'ai',
+ context:'Leadership wants an AI assistant on the product pages. Legal is nervous about claims regarding range, warranty, pricing and financing. Dealers worry it will replace their sales conversation. You have product specs, service records and a pricing engine available for grounding.',
+ prompt:'Scope the assistant: what it retrieves, what it must categorically refuse, how it escalates to a human, and how you evaluate quality. Then define the success metric that is not "engagement".',
+ deliver:'AI assistant PRD with grounding sources, refusal policy, escalation design, eval plan (20 test cases), and success metrics.',
+ signal:'The differentiator is the refusal policy and eval design. Almost every candidate specifies the happy path; very few specify what the system must never say.'},
+
+{id:'c8',title:'AI feature economics at 1M queries',domain:'AI',diff:'Advanced',week:37,type:'ai',
+ context:'Your assistant works. At 10K queries a month the cost is invisible. Growth projects 1M queries a month within three quarters. Average interaction is 6 turns with retrieval on every turn. Latency at p95 is 4.2 seconds and users abandon above 3.',
+ prompt:'Build the cost and latency model. Identify at what volume the economics break, then propose the architecture changes \u2014 routing, caching, model tiering, truncation \u2014 with the quality trade-off each carries.',
+ deliver:'Cost model across three volume tiers + architecture optimisation memo with quality trade-offs quantified.',
+ signal:'Very few PM candidates can hold cost, latency and quality in the same argument. Doing so credibly is an instant differentiator in an AI PM loop.'},
+
+{id:'c9',title:'Pricing the thing that comes after the sale',domain:'Monetisation',diff:'Core',week:18,type:'growth',
+ context:'Vehicle margins are thin and shrinking. Accessories, extended warranty and service plans carry 3\u20134x the margin but attach rates sit at 12%. Attachment currently happens at the dealer, verbally, at the point of delivery.',
+ prompt:'Design the monetisation strategy: what to charge for, when in the journey to present it, how to package it, and how you would research willingness to pay. Include the dealer incentive implication.',
+ deliver:'Pricing and packaging proposal with value metric, WTP research plan, journey placement, and a test design.',
+ signal:'Strong answers move the attach moment earlier in the journey and address the dealer commission conflict explicitly rather than ignoring it.'},
+
+{id:'c10',title:'Entering a market you do not lead',domain:'Strategy',diff:'Advanced',week:41,type:'strategy',
+ context:'A legacy OEM with strong distribution and brand trust faces EV-native competitors who are faster, digitally superior, and unprofitable. The OEM has 300+ partner outlets, a service network, and a slow release cycle.',
+ prompt:'Write the product strategy. Where do you play, how do you win, and what do you deliberately not contest? Name the asymmetry you exploit and the capability you must build or buy.',
+ deliver:'Three-year strategy memo: market view, asymmetry thesis, three strategic bets, capability gaps, kill criteria for each bet.',
+ signal:'This is your home turf. Answering it with real operating detail rather than consultancy abstraction is what makes you memorable versus a generic candidate.'},
+
+{id:'c11',title:'The metric that made everything worse',domain:'Metrics',diff:'Core',week:4,type:'metrics',
+ context:'A team was given "leads generated" as its North Star. Leads grew 3x in two quarters. Sales conversion fell from 8% to 2.6%. Dealer satisfaction dropped. Total sales are flat. The team believes it succeeded.',
+ prompt:'Diagnose the metric failure, then design the replacement metric system: North Star, input metrics, counter-metrics, and the reporting cadence that would have caught this in week three rather than quarter three.',
+ deliver:'Metric system redesign memo including the specific counter-metric that would have surfaced the problem early.',
+ signal:'Interviewers use this shape of question constantly. The strong answer names the Goodhart problem without jargon and rebuilds the system, not just the one metric.'},
+
+{id:'c12',title:'Your first 90 days as Senior PM',domain:'Leadership',diff:'Advanced',week:45,type:'leadership',
+ context:'You have joined a Series B consumer startup in Bengaluru as Senior PM owning a growth surface. The team has two engineers, no dedicated designer, no analyst, and a roadmap inherited from a founder who still has strong opinions. Instrumentation is patchy.',
+ prompt:'Write your 90-day plan: what you learn in the first 30, what you fix in the next 30, what you ship by day 90, and how you handle the founder-owned roadmap without becoming either a rubber stamp or a threat.',
+ deliver:'First-90-days plan with weekly milestones, stakeholder map, quick-win selection, and the founder-relationship strategy.',
+ signal:'This is a real final-round question at Indian startups. Having a written, specific answer already prepared changes the temperature of that conversation entirely.'}
+];
+
+/* ============ STATE ============ */
+const KEY='pmOS:v2';
+const DEFAULT={
+  profile:{name:'Sonam',start:'2026-08-17',role:'Senior Product Manager / Growth PM',city:'Bengaluru',ctc:'',
+    context:'Product Manager \u2013 Digital & Analytics at Bajaj Auto. Built the first D2C e-commerce journey for premium two-wheelers (0-to-1), 20%+ of sales contribution, 5x conversion lift, 30% YoY organic traffic growth, 20% CAC reduction, 2x qualified leads. Rolled out hyperlocal MarTech across 300+ channel partners. WhatsApp Business API / chatbot / voicebot engagement layer. Prior: Manager \u2013 Sales Strategy (Bajaj Auto), Assistant Manager BD (Lemon Tree Hotels). MBA Marketing, IMT Ghaziabad. Skills: GA4, VWO, Sitecore, Figma, SEO. Gap areas being closed: SQL, product analytics depth, AI product thinking, consumer-scale metrics.'},
+  weeks:{},cases:{},artifacts:[],chat:[],apps:[],ints:[]
+};
+let S=JSON.parse(JSON.stringify(DEFAULT));
+let PAGE='dash', OPEN=null, QTAB=1, PENDING=null, BUSY=false;
+
+let HEALTH={ai:'unknown',model:''};
+async function load(){
+  try{
+    const r=await fetch('/api/state');
+    if(r.ok){const d=await r.json(); if(d&&typeof d==='object')S=Object.assign(JSON.parse(JSON.stringify(DEFAULT)),d);}
+  }catch(e){toast('Server unreachable \u2014 running read-only until it is back.');}
+  try{const h=await fetch('/api/health'); if(h.ok)HEALTH=await h.json();}catch(e){}
+}
+let saveT=null,saving=false;
+function save(){
+  clearTimeout(saveT);
+  saveT=setTimeout(async()=>{
+    if(saving)return save();
+    saving=true;
+    try{
+      const r=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(S)});
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      const d=document.getElementById('savedot'); if(d){d.textContent='saved';d.className='chip green';setTimeout(()=>{if(d)d.className='chip';},1500);}
+    }catch(e){toast('Save failed \u2014 changes are still in the page. Check the server.');}
+    saving=false;
+  },300);
+}
+
+/* ============ UTILS ============ */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+function dAdd(iso,days){const d=new Date(iso+'T00:00:00');d.setDate(d.getDate()+days);return d;}
+function fmt(d){return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});}
+function weekStart(n){return dAdd(S.profile.start,(n-1)*7);}
+function curWeek(){const s=new Date(S.profile.start+'T00:00:00');const t=new Date();const d=Math.floor((t-s)/864e5);if(d<0)return 0;return Math.min(52,Math.floor(d/7)+1);}
+function wDone(n){return !!(S.weeks[n]&&S.weeks[n].done);}
+function doneCount(){return WEEKS.filter(w=>wDone(w.n)).length;}
+function copyText(t){
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(()=>toast('Copied \u2014 paste it into the chat.'),()=>fallbackCopy(t));return;}
+  }catch(e){}
+  fallbackCopy(t);
+}
+function fallbackCopy(t){
+  const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');toast('Copied \u2014 paste it into the chat.');}catch(e){toast('Copy blocked \u2014 use Download instead.');}
+  ta.remove();
+}
+function toast(m){const t=document.createElement('div');t.textContent=m;t.style.cssText='position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#1E2836;border:1px solid #3A4759;color:#E9E6DD;padding:10px 18px;border-radius:9px;font-size:13px;z-index:99;box-shadow:0 6px 24px rgba(0,0,0,.5)';document.body.appendChild(t);setTimeout(()=>t.remove(),3600);}
+
+/* ============ CLAUDE ENGINE ============ */
+let AI_OK=null;
+function offlineErr(){const e=new Error('offline');e.offline=true;return e;}
+async function api(path,body){
+  let r;
+  try{r=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}
+  catch(e){AI_OK=false;throw offlineErr();}
+  if(r.status===503){AI_OK=false;const e=offlineErr();e.nokey=true;throw e;}
+  if(!r.ok){let m='HTTP '+r.status;try{const j=await r.json();m=j.error||m;}catch(_){}throw new Error(m);}
+  AI_OK=true;return r.json();
+}
+function profilePayload(){return {context:S.profile.context,role:S.profile.role,city:S.profile.city};}
+async function runReview(type,content){
+  const rub=RUBRICS[type]||RUBRICS.strategy;
+  return api('/api/ai/review',{type:type,label:rub.label,dims:rub.dims,title:STUDIO.title||'',content:content,profile:profilePayload()});
+}
+
+/* ============ OFFLINE REVIEW ENGINE ============ */
+// The artifact sandbox may have no route to the review API. Everything below
+// works with zero network so the studio is never a dead end.
+let OFF={kind:null,id:null,type:'strategy',title:'',content:''};
+
+function buildRequest(type,title,content){
+  const r=RUBRICS[type]||RUBRICS.strategy;
+  return `Act as a hiring VP of Product reviewing this artifact against the Senior PM (L3) bar at a Series B/C company in Bengaluru. Be strict; most first drafts sit at 2-3.
+
+ARTIFACT: ${title||'Untitled'}
+RUBRIC: ${r.label}
+SCORE THESE DIMENSIONS 1-5, in order: ${r.dims.join(', ')}
+(3 = competent mid-level PM, 4 = clears the Senior PM bar, 5 = would be shown to a VP as an example)
+
+Return ONLY this JSON, no prose around it:
+{"level":"Below bar|At bar|Senior bar","headline":"one blunt sentence","scores":[{"dim":"...","score":0,"why":"one sentence citing something specific"}],"strengths":["..."],"fixes":[{"issue":"...","how":"..."}],"rewrite":"quote one weak passage, then rewrite it to the standard","next":"single highest-leverage next action"}
+
+MY CONTEXT: ${S.profile.context}
+TARGET ROLE: ${S.profile.role} in ${S.profile.city}
+
+--- WORK TO REVIEW ---
+${content||'(file attached separately)'}`;
+}
+
+const WEAK=/\b(worked on|helped with|helped to|assisted|involved in|responsible for|participated|supported the|was part of|contributed to)\b/gi;
+const HEDGE=/\b(maybe|might be|sort of|kind of|i think|possibly|hopefully|somewhat|fairly good|quite good)\b/gi;
+function localCheck(type,text){
+  const t=String(text||''),words=t.trim()?t.trim().split(/\s+/).length:0;
+  const nums=(t.match(/\d+(\.\d+)?\s*(%|x|k|cr|lakh|crore|bps)?/gi)||[]).length;
+  const weak=(t.match(WEAK)||[]);
+  const hedge=(t.match(HEDGE)||[]);
+  const heads=(t.match(/^\s*(#{1,4}\s|\d+[.)]\s|[-*\u2022]\s|[A-Z][A-Za-z ]{2,28}:)/gm)||[]).length;
+  const metric=/\b(conversion|retention|cohort|funnel|CAC|LTV|north star|counter[- ]metric|baseline|p95|MDE|guardrail|attach rate|payback)\b/i.test(t);
+  const nongoal=/\b(non[- ]goal|out of scope|not doing|deliberately not|we will not)\b/i.test(t);
+  const decision=/\b(i recommend|my recommendation|i would|therefore|my call|decision:)\b/i.test(t);
+  const f=[];
+  f.push({ok:words>=250,label:'Depth',detail:words+' words. Portfolio artifacts that hold up in an interview usually run 500\u20131200. Under 250 reads as a summary of thinking rather than the thinking itself.'});
+  f.push({ok:nums>=4,label:'Quantification',detail:nums+' numeric claims found. A reviewer scans for numbers first; four or more is the rough floor for a credible analysis.'});
+  f.push({ok:weak.length===0,label:'Ownership verbs',detail:weak.length?('Weak verbs found: '+[...new Set(weak.map(w=>w.toLowerCase()))].slice(0,4).join(', ')+'. Replace with what you decided, diagnosed, designed or cut.'):'No hedged ownership verbs. Good \u2014 you are claiming your decisions.'});
+  const hedgeAllow=Math.floor(words/300); // one hedge per ~300 words is human; more reads as unsure
+  f.push({ok:hedge.length<=hedgeAllow,label:'Conviction',detail:hedge.length?(hedge.length+' hedging phrase'+(hedge.length>1?'s':'')+' ('+[...new Set(hedge.map(h=>h.toLowerCase()))].slice(0,3).join(', ')+'). Senior writing states a position and then names the risk, rather than pre-softening every claim.'):'No hedging language.'});
+  f.push({ok:heads>=4,label:'Structure',detail:heads+' headings or list markers. A reviewer reads in 90 seconds; unstructured prose loses them before the insight lands.'});
+  f.push({ok:metric,label:'Metric literacy',detail:metric?'Metric vocabulary present.':'No metric vocabulary detected. Almost every rubric here scores metric closure \u2014 name the measure and the counter-measure.'});
+  f.push({ok:decision,label:'Recommendation',detail:decision?'A recommendation is stated.':'No explicit recommendation found. Analysis without a call is the single most common reason a strong candidate reads as mid-level.'});
+  if(type==='prd'||type==='strategy')f.push({ok:nongoal,label:'Scope cuts',detail:nongoal?'Non-goals are stated.':'No non-goals or scope cuts. What you refuse to build is the clearest seniority signal in a spec.'});
+  return f;
+}
+function localBlock(type,text){
+  const f=localCheck(type,text),pass=f.filter(x=>x.ok).length;
+  return `<div class="wksec"><div class="kicker">Mechanical check \u00b7 ${pass}/${f.length} clear (runs locally, no network)</div>
+    ${f.map(x=>`<div class="box ${x.ok?'green':''}" style="margin-bottom:6px;border-left-color:var(--${x.ok?'green':'red'})"><b>${x.ok?'\u2713':'\u2717'} ${esc(x.label)}</b><br>${esc(x.detail)}</div>`).join('')}</div>`;
+}
+function selfScoreBlock(type){
+  const r=RUBRICS[type]||RUBRICS.strategy;
+  return `<div class="wksec"><div class="kicker">Or score it yourself against the rubric</div>
+    ${r.dims.map((d,i)=>`<div class="sc"><span class="dim">${esc(d)}</span><input type="range" min="1" max="5" value="3" id="ss${i}" style="flex:1;padding:0"><span class="v" id="sv${i}">3</span></div>`).join('')}
+    <button class="btn sm" data-act="saveself">Save self-score</button></div>`;
+}
+function offlinePanel(kind,id,type,title,content){
+  OFF={kind:kind,id:id,type:type,title:title,content:content};
+  return `<div class="panel" style="background:#101720">
+    <div class="row sp"><h2 style="margin:0">Review \u00b7 two-step mode</h2><span class="chip gold">${AI_OK===false&&HEALTH.ai==='no_key'?'no API key on the server':'server unreachable'}</span></div>
+    <p class="tiny muted" style="margin:8px 0 14px">The review call did not complete. Either the server is down or ANTHROPIC_API_KEY is not set on it \u2014 check the status strip on Mission Control. Meanwhile: the mechanical check below still runs, you can self-score, or copy the request into any Claude chat and paste the JSON back here. Nothing is lost either way.</p>
+    <div class="row"><button class="btn pri" data-act="copyreq">Copy review request</button><button class="btn" data-act="dlreq">Download as .md</button></div>
+    ${localBlock(type,content)}
+    ${selfScoreBlock(type)}
+    <div class="wksec"><div class="kicker">Paste the coach\u2019s reply here</div>
+      <textarea id="pasteBack" rows="5" placeholder="Paste the JSON scorecard (or any written feedback) and it will be saved against this artifact."></textarea>
+      <button class="btn pri" style="margin-top:8px" data-act="pastesave">Save review</button></div>
+  </div>`;
+}
+function attachReview(rev){
+  if(OFF.kind==='artifact'){
+    let a=S.artifacts.find(x=>x.id===OFF.id);
+    if(!a){a={id:OFF.id||uid(),title:OFF.title,type:OFF.type,week:STUDIO.week,status:'Draft',content:OFF.content,score:null,review:null,link:'',ts:Date.now()};S.artifacts.push(a);OFF.id=a.id;}
+    a.review=rev;a.score=rev.scoreAvg||null;if(a.score>=4)a.status='Reviewed';
+  }else if(OFF.kind==='case'){S.cases[OFF.id]=S.cases[OFF.id]||{};S.cases[OFF.id].review=rev;}
+  save();
+}
+function avgOf(r){return r&&r.scores&&r.scores.length?+(r.scores.reduce((a,b)=>a+(+b.score||0),0)/r.scores.length).toFixed(1):null;}
+
+/* ============ RENDER ROOT ============ */
+function render(){
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('on',b.dataset.page===PAGE));
+  const m=$('#main');
+  m.innerHTML=({dash:vDash,plan:vPlan,cases:vCases,studio:vStudio,portfolio:vPort,interview:vInt,coach:vCoach,data:vData}[PAGE])();
+  bind();
+  m.scrollTop=0;window.scrollTo(0,0);
+}
+document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{PAGE=b.dataset.page;render();}));
+
+/* ============ VIEW: MISSION CONTROL ============ */
+function vDash(){
+  const cw=curWeek(), done=doneCount(), pct=Math.round(done/52*100);
+  const arts=S.artifacts.length, reviewed=S.artifacts.filter(a=>a.review).length;
+  const pub=S.artifacts.filter(a=>a.status==='Published').length;
+  const casesDone=Object.values(S.cases).filter(c=>c.review).length;
+  const avg=(()=>{const s=S.artifacts.filter(a=>a.score).map(a=>a.score);return s.length?(s.reduce((x,y)=>x+y,0)/s.length).toFixed(1):'\u2014';})();
+  const w=WEEKS.find(x=>x.n===(cw||1));
+  const meter=WEEKS.map(x=>`<i class="${wDone(x.n)?'f':(x.n<=cw?'h':'')}"></i>`).join('');
+  return `
+  <div class="kicker">${cw?'Week '+cw+' of 52 \u00b7 '+QUARTERS[w.q-1].name:'Pre-launch'}</div>
+  <h1>Mission Control</h1>
+  <p class="lede">Every week here ends in an artifact. The artifact gets reviewed against a hiring bar. The reviewed artifact goes into the portfolio. That is the whole machine \u2014 interview readiness is a by-product of building in public, not a separate track.</p>
+
+  <div class="grid g4">
+    <div class="stat"><div class="n">${done}/52</div><div class="l">Weeks shipped</div><div class="s">${pct}% of the plan</div></div>
+    <div class="stat"><div class="n">${arts}</div><div class="l">Artifacts built</div><div class="s">${reviewed} reviewed \u00b7 ${pub} published</div></div>
+    <div class="stat"><div class="n">${avg}</div><div class="l">Avg review score</div><div class="s">4.0 = Senior PM bar</div></div>
+    <div class="stat"><div class="n">${casesDone}/${CASES.length}</div><div class="l">Cases solved</div><div class="s">${S.apps.length} applications live</div></div>
+  </div>
+  <div class="meter" style="margin-top:14px">${meter}</div>
+  <div class="row" style="margin-top:12px">
+    <span class="chip ${HEALTH.ai==='live'?'green':HEALTH.ai==='mock'?'gold':'red'}">model ${esc(HEALTH.model||'\u2014')} \u00b7 ${esc(HEALTH.ai==='live'?'connected':HEALTH.ai==='mock'?'mock mode':HEALTH.ai==='no_key'?'no API key set':'server offline')}</span>
+    <span class="chip" id="savedot">autosave on</span>
+    <span class="chip">${HEALTH.calls||0} model calls logged</span>
+    <a class="chip cyan" href="/api/usage" target="_blank">usage log</a>
+  </div>
+
+  <div class="panel" style="margin-top:22px">
+    <div class="row sp"><h2 style="margin:0">${cw?'This week':'First week up'} \u00b7 W${w.n} \u00b7 ${esc(w.t)}</h2><span class="chip gold">${esc(RUBRICS[w.type].label)}</span></div>
+    <div class="wksec"><div class="kicker">Topics</div><ul class="t">${w.topics.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>
+    <div class="wksec"><div class="kicker">The drill</div><div class="box">${esc(w.drill)}</div></div>
+    <div class="wksec"><div class="kicker">Ships as</div><div class="box gold"><b>${esc(w.artifact)}</b></div></div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn pri" data-act="goweek" data-w="${w.n}">Open week ${w.n}</button>
+      <button class="btn" data-act="build" data-w="${w.n}">Build this artifact</button>
+    </div>
+  </div>
+
+  <div class="grid g2" style="margin-top:14px">
+    <div class="panel">
+      <h2>Next three moves</h2>
+      ${nextMoves().map(x=>`<div class="box" style="margin-bottom:8px">${x}</div>`).join('')}
+    </div>
+    <div class="panel">
+      <h2>Portfolio pulse</h2>
+      ${S.artifacts.length?S.artifacts.slice(-5).reverse().map(a=>`<div class="row sp" style="padding:7px 0;border-bottom:1px solid #1E2734"><span>${esc(a.title)}</span><span class="pill">${a.score?a.score+'/5':a.status}</span></div>`).join(''):'<p class="muted tiny">Nothing built yet. The fastest way to start is the Week 1 drill \u2014 it uses work you already own, so there is no research overhead.</p>'}
+    </div>
+  </div>`;
+}
+function nextMoves(){
+  const cw=curWeek()||1, out=[];
+  const nd=WEEKS.find(w=>!wDone(w.n));
+  if(nd)out.push(`<b>Week ${nd.n}:</b> ${esc(nd.artifact)}`);
+  const unrev=S.artifacts.find(a=>!a.review);
+  if(unrev)out.push(`<b>Unreviewed:</b> "${esc(unrev.title)}" is sitting in the Studio without a score. Review it before building the next one.`);
+  else out.push(`<b>Case Vault:</b> solve "${esc((CASES.find(c=>!S.cases[c.id]||!S.cases[c.id].review)||CASES[0]).title)}" \u2014 it converts straight into a portfolio piece.`);
+  const pub=S.artifacts.filter(a=>a.status==='Published').length;
+  out.push(pub<3?`<b>Publishing:</b> ${pub} of your artifacts are public. Portfolio visibility is what converts applications into inbound; aim for one post per fortnight.`:`<b>Outreach:</b> attach your strongest artifact to five warm messages this week. Ask for critique, not a referral.`);
+  return out.slice(0,3);
+}
+
+/* ============ VIEW: 52-WEEK PLAN ============ */
+function vPlan(){
+  const cw=curWeek();
+  const q=QUARTERS[QTAB-1];
+  const ws=WEEKS.filter(w=>w.q===QTAB);
+  const qd=ws.filter(w=>wDone(w.n)).length;
+  return `
+  <div class="kicker">Curriculum \u00b7 ${S.profile.start} \u2192 ${fmt(weekStart(52))} 2027</div>
+  <h1>The 52-Week Plan</h1>
+  <p class="lede">Roughly 3\u20134 hours a week. Watch, then do, then ship. If a week produces no artifact, that week did not happen \u2014 mark it undone and repeat it rather than moving on. Links open the source channel or a topic search on it, so nothing here rots.</p>
+  <div class="panel" style="margin-bottom:16px">
+    <div class="kicker">Source library</div>
+    <div class="res" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px">
+      ${[R.swag,R.rethink,R.lenny,R.aakash,R.aakashN,R.expo,R.expoQ,R.diego,R.folks,R.sqlQ,R.mode,R.lennyN].map(r=>`<a href="${r[1]}" target="_blank" rel="noopener"><span class="ti">${esc(r[0])}</span></a>`).join('')}
+    </div>
+  </div>
+  <div class="qtabs">${QUARTERS.map(x=>`<button class="qtab ${x.q===QTAB?'on':''}" data-act="qtab" data-q="${x.q}"><b>Q${x.q}</b>${esc(x.name)}</button>`).join('')}</div>
+  <div class="panel" style="margin-bottom:16px">
+    <div class="row sp"><div><h2 style="margin:0 0 3px">Q${q.q} \u00b7 ${esc(q.name)}</h2><div class="muted tiny">${esc(q.sub)} \u00b7 weeks ${q.weeks}</div></div><span class="chip ${qd===13?'green':'gold'}">${qd}/13 shipped</span></div>
+  </div>
+  ${ws.map(w=>{
+    const d=wDone(w.n),now=w.n===cw,st=weekStart(w.n);
+    return `<div class="wk ${d?'done':''} ${now?'now':''} ${OPEN===w.n?'open':''}">
+      <div class="wkhead" data-act="togw" data-w="${w.n}">
+        <span class="wknum">W${String(w.n).padStart(2,'0')}</span>
+        <span class="wktitle">${esc(w.t)}</span>
+        ${now?'<span class="chip gold">now</span>':''}
+        <span class="chip">${esc(RUBRICS[w.type].label.split(' ')[0])}</span>
+        <span class="wkdate">${fmt(st)}</span>
+      </div>
+      <div class="wkbody">
+        <div class="wksec"><div class="kicker">Topics \u00b7 exactly what to learn</div><ul class="t">${w.topics.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>
+        <div class="wksec"><div class="kicker">Watch / read</div><div class="res">${w.res.map(r=>`<a href="${r[1]}" target="_blank" rel="noopener"><span class="src">${esc(r[0])}</span><span class="ti">${esc(r[1].includes('search?')?'Topic search on channel':r[1].replace(/^https?:\/\/(www\.)?/,'').slice(0,58))}</span></a>`).join('')}</div></div>
+        <div class="wksec"><div class="kicker">The drill \u00b7 do this, not just watch</div><div class="box">${esc(w.drill)}</div></div>
+        <div class="wksec"><div class="kicker">Ships as</div><div class="box gold"><b>${esc(w.artifact)}</b></div></div>
+        <div class="row" style="margin-top:14px">
+          <button class="btn ${d?'':'pri'}" data-act="mark" data-w="${w.n}">${d?'Mark undone':'Mark week shipped'}</button>
+          <button class="btn" data-act="build" data-w="${w.n}">Build &amp; review the artifact</button>
+        </div>
+      </div>
+    </div>`;}).join('')}`;
+}
+
+/* ============ VIEW: CASE VAULT ============ */
+function vCases(){
+  return `
+  <div class="kicker">Practice that compounds</div>
+  <h1>Case Vault</h1>
+  <p class="lede">Twelve cases built around the domains you can speak to with authority \u2014 mobility, D2C, phygital, lifecycle, AI. Each one is simultaneously an interview drill and a portfolio artifact: solve it, get it graded, publish the good ones. Generic candidates answer generic cases. You will answer cases nobody else can answer as well as you.</p>
+  <div class="grid g2">
+    ${CASES.map(c=>{const st=S.cases[c.id]||{};return `
+      <div class="case">
+        <div class="row sp"><h3>${esc(c.title)}</h3>${st.review?`<span class="chip green">${st.review.scoreAvg||''} solved</span>`:`<span class="chip ${c.diff==='Advanced'?'violet':'cyan'}">${c.diff}</span>`}</div>
+        <div class="row"><span class="pill">${esc(c.domain)}</span><span class="pill">pairs with W${c.week}</span></div>
+        <p>${esc(c.context.slice(0,150))}\u2026</p>
+        <div class="row"><button class="btn sm" data-act="case" data-c="${c.id}">${st.answer?'Continue':'Open case'}</button></div>
+      </div>`;}).join('')}
+  </div>`;
+}
+function vCase(id){
+  const c=CASES.find(x=>x.id===id), st=S.cases[id]||{};
+  $('#main').innerHTML=`
+  <button class="btn sm ghost" data-act="backcases">\u2190 Case Vault</button>
+  <div class="kicker" style="margin-top:16px">${esc(c.domain)} \u00b7 ${esc(c.diff)} \u00b7 pairs with week ${c.week}</div>
+  <h1>${esc(c.title)}</h1>
+  <div class="panel"><div class="kicker">Context</div><p style="margin:0 0 14px">${esc(c.context)}</p>
+    <div class="kicker">The question</div><div class="box" style="margin-bottom:12px">${esc(c.prompt)}</div>
+    <div class="kicker">Deliverable</div><div class="box gold" style="margin-bottom:12px">${esc(c.deliver)}</div>
+    <div class="kicker">What is actually being tested</div><div class="box green">${esc(c.signal)}</div>
+  </div>
+  <div class="panel">
+    <h2>Your answer</h2>
+    <textarea id="cAns" rows="16" placeholder="Structure it as you would in a real interview or a real memo. Aim for 500\u20131200 words \u2014 depth beats coverage.">${esc(st.answer||'')}</textarea>
+    <div class="row" style="margin-top:12px">
+      <button class="btn pri" data-act="gradecase" data-c="${id}">Grade against the hiring bar</button>
+      <button class="btn" data-act="savecase" data-c="${id}">Save draft</button>
+      <button class="btn" data-act="tostudio" data-c="${id}">Send to Portfolio</button>
+    </div>
+    <div id="cOut" style="margin-top:16px">${st.review?scorecard(st.review):''}</div>
+  </div>`;
+  bind();
+}
+
+/* ============ SCORECARD ============ */
+function scorecard(r){
+  if(!r)return'';
+  if(!r.scores)return `<div class="panel" style="background:#101720"><div class="row sp"><span class="verdict">Written review</span>${r.src?`<span class="chip">${esc(r.src)}</span>`:''}</div><div class="box" style="white-space:pre-wrap;margin-top:10px">${esc(r.text||'')}</div></div>`;
+  const lv=r.level||'', col=lv.includes('Senior')?'green':lv.includes('At')?'gold':'red';
+  return `<div class="panel" style="background:#101720">
+    <div class="row sp"><span class="verdict" style="color:var(--${col==='green'?'green':col==='gold'?'gold':'red'})">${esc(lv)}</span><div class="row">${r.src?`<span class="chip">${esc(r.src)}</span>`:''}<span class="chip ${col}">avg ${(r.scores.reduce((a,b)=>a+(+b.score||0),0)/r.scores.length).toFixed(1)}/5</span></div></div>
+    <p style="margin:8px 0 16px;font-size:13.5px">${esc(r.headline||'')}</p>
+    ${r.scores.map(s=>`<div class="sc"><span class="dim">${esc(s.dim)}</span><span class="bar"><i style="width:${(+s.score||0)*20}%"></i></span><span class="v">${esc(s.score)}/5</span></div><div class="tiny muted" style="margin:-2px 0 9px 160px">${esc(s.why||'')}</div>`).join('')}
+    ${r.strengths&&r.strengths.length?`<div class="wksec"><div class="kicker">Holds up</div><ul class="t">${r.strengths.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
+    ${r.fixes&&r.fixes.length?`<div class="wksec"><div class="kicker">Fix before this goes public</div>${r.fixes.map(f=>`<div class="box red" style="margin-bottom:7px;border-left-color:var(--red)"><b>${esc(f.issue)}</b><br>${esc(f.how)}</div>`).join('')}</div>`:''}
+    ${r.rewrite?`<div class="wksec"><div class="kicker">What better looks like</div><div class="box gold" style="white-space:pre-wrap">${esc(r.rewrite)}</div></div>`:''}
+    ${r.next?`<div class="wksec"><div class="kicker">Next move</div><div class="box green">${esc(r.next)}</div></div>`:''}
+  </div>`;
+}
+
+/* ============ VIEW: STUDIO ============ */
+function vStudio(){
+  const opts=Object.keys(RUBRICS).map(k=>`<option value="${k}" ${STUDIO.type===k?'selected':''}>${esc(RUBRICS[k].label)}</option>`).join('');
+  return `
+  <div class="kicker">Upload \u00b7 review \u00b7 revise</div>
+  <h1>Artifact Studio</h1>
+  <p class="lede">Paste or upload the work, pick the rubric it should be judged against, and get it scored the way a hiring VP would score it \u2014 dimension by dimension, with the weak passage rewritten so you can see the standard. Score below 4 means it is not portfolio-ready yet.</p>
+  <div class="panel">
+    <div class="grid g2">
+      <div class="field"><label class="f">Artifact title</label><input id="aTitle" value="${esc(STUDIO.title)}" placeholder="e.g. Funnel Teardown \u2014 D2C EV booking"></div>
+      <div class="field"><label class="f">Rubric</label><select id="aType">${opts}</select></div>
+    </div>
+    <div class="field"><label class="f">Linked week (optional)</label><select id="aWeek"><option value="">\u2014 none \u2014</option>${WEEKS.map(w=>`<option value="${w.n}" ${STUDIO.week==w.n?'selected':''}>W${w.n} \u00b7 ${esc(w.t)}</option>`).join('')}</select></div>
+    <div class="field"><label class="f">Content \u2014 paste the work, or upload below</label>
+      <textarea id="aBody" rows="14" placeholder="Paste your memo, PRD, teardown, analysis, resume text, or case answer here.">${esc(STUDIO.body)}</textarea></div>
+    <div class="row sp">
+      <div class="row">
+        <input type="file" id="aFile" accept=".txt,.md,.csv,.json,.html,.pdf,.png,.jpg,.jpeg" style="display:none">
+        <button class="btn" data-act="pick">Upload file</button>
+        <span class="tiny muted">${PENDING?'Attached: '+esc(PENDING.name):'.md .txt .csv .json .pdf .png .jpg \u00b7 for .docx, export to PDF first'}</span>
+      </div>
+      <div class="row">
+        ${PENDING?'<button class="btn sm ghost" data-act="clearfile">Remove file</button>':''}
+        <button class="btn" data-act="saveonly">Save without review</button>
+        <button class="btn" data-act="copyreqstudio">Copy review request</button>
+        <button class="btn pri" data-act="review">Run review</button>
+      </div>
+    </div>
+    <div id="rOut" style="margin-top:18px"></div>
+  </div>`;
+}
+let STUDIO={title:'',type:'strategy',week:'',body:''};
+function syncStudio(){const t=$('#aTitle'),y=$('#aType'),w=$('#aWeek'),b=$('#aBody');if(t)STUDIO.title=t.value;if(y)STUDIO.type=y.value;if(w)STUDIO.week=w.value;if(b)STUDIO.body=b.value;}
+
+/* ============ VIEW: PORTFOLIO ============ */
+function vPort(){
+  const a=S.artifacts;
+  return `
+  <div class="kicker">Evidence, not claims</div>
+  <h1>Portfolio</h1>
+  <p class="lede">A resume asserts. A portfolio proves. Target for the year: nine to twelve artifacts, of which at least six are public and one is working software. Anything scoring under 4 stays private until it is fixed \u2014 publishing weak work is worse than publishing nothing.</p>
+  ${a.length?`
+  <div class="panel"><table>
+    <tr><th>Artifact</th><th>Type</th><th>Week</th><th>Score</th><th>Status</th><th></th></tr>
+    ${a.slice().reverse().map(x=>`<tr>
+      <td><b>${esc(x.title)}</b>${x.link?`<br><a href="${esc(x.link)}" target="_blank" rel="noopener" class="tiny">${esc(x.link.slice(0,44))}</a>`:''}</td>
+      <td>${esc((RUBRICS[x.type]||{}).label||x.type)}</td>
+      <td class="mono">${x.week?'W'+x.week:'\u2014'}</td>
+      <td>${x.score?`<span class="chip ${x.score>=4?'green':x.score>=3?'gold':'red'}">${x.score}/5</span>`:'<span class="muted">unscored</span>'}</td>
+      <td><select data-act="status" data-id="${x.id}" style="padding:4px 6px;font-size:11.5px">${['Draft','Reviewed','Published'].map(s=>`<option ${x.status===s?'selected':''}>${s}</option>`).join('')}</select></td>
+      <td class="row"><button class="btn sm" data-act="viewart" data-id="${x.id}">Open</button><button class="btn sm ghost" data-act="hook" data-id="${x.id}">Post hook</button><button class="btn sm ghost" data-act="delart" data-id="${x.id}">\u2715</button></td>
+    </tr>`).join('')}
+  </table></div>
+  <div id="pOut" style="margin-top:14px"></div>`:
+  `<div class="panel"><p class="muted">Empty. Build the Week 1 artifact \u2014 it uses the D2C work you already own, so it costs you thinking time, not research time.</p><button class="btn pri" data-act="goplan">Open the plan</button></div>`}`;
+}
+
+/* ============ VIEW: INTERVIEW RANGE ============ */
+const QBANK=[
+ ['Product sense','Design a product that helps first-time EV buyers overcome range anxiety.'],
+ ['Product sense','Your company wants to enter used-vehicle sales. What do you build first and why?'],
+ ['Product sense','Improve the experience of booking a test ride. Pick one segment and go deep.'],
+ ['Metrics','Bookings are down 22% but traffic is flat. Walk me through your diagnosis.'],
+ ['Metrics','What is the North Star for a marketplace where purchase happens once every five years?'],
+ ['Metrics','Engagement is up and revenue is flat. Which do you trust and what do you do?'],
+ ['Execution','You have half the engineering team you planned for. What ships and what dies?'],
+ ['Execution','A launch is two weeks out and QA finds a data-integrity bug. Your call.'],
+ ['Execution','Estimate the annual market for two-wheeler service plans in India.'],
+ ['Growth','CAC has risen 40% in 18 months. Give me your first three moves.'],
+ ['Growth','Design an experiment to lift activation. Include your decision rule before you see data.'],
+ ['Growth','Where does the compounding come from in a low-frequency purchase category?'],
+ ['AI PM','Where would you not use an LLM in your current product, and why?'],
+ ['AI PM','How would you evaluate an AI assistant before letting it talk to customers?'],
+ ['AI PM','Your AI feature costs three times its revenue contribution. Walk me through your options.'],
+ ['Behavioural','Tell me about a time data contradicted a decision you had already argued for publicly.'],
+ ['Behavioural','Describe the hardest stakeholder you have had to move, and how you moved them.'],
+ ['Behavioural','Tell me about something you killed.'],
+ ['Behavioural','What is the largest scope you have owned, and what broke at that scale?'],
+ ['Leadership','You inherit a founder-written roadmap you disagree with. First 30 days?']
+];
+function vInt(){
+  const cats=[...new Set(QBANK.map(q=>q[0]))];
+  return `
+  <div class="kicker">Convert</div>
+  <h1>Interview Range</h1>
+  <p class="lede">Range is what gets tested: the same candidate has to be credible on product sense, on numbers, on systems, and on people. Drill an answer here and it gets graded on the interview rubric \u2014 structure, depth, prioritisation, metrics closure, concision.</p>
+  <div class="panel">
+    <h2>Question bank</h2>
+    ${cats.map(c=>`<div class="wksec"><div class="kicker">${esc(c)}</div>${QBANK.filter(q=>q[0]===c).map((q,i)=>`<div class="row sp" style="padding:7px 0;border-bottom:1px solid #1E2734"><span style="flex:1;font-size:13px">${esc(q[1])}</span><button class="btn sm" data-act="drill" data-q="${esc(q[1])}">Drill</button></div>`).join('')}</div>`).join('')}
+  </div>
+  <div id="dOut"></div>
+  <div class="panel">
+    <div class="row sp"><h2 style="margin:0">Application pipeline</h2><button class="btn sm" data-act="addapp">+ Add</button></div>
+    ${S.apps.length?`<table style="margin-top:10px"><tr><th>Company</th><th>Role</th><th>Stage</th><th>Notes</th><th></th></tr>
+      ${S.apps.map(a=>`<tr>
+        <td><b>${esc(a.co)}</b></td><td>${esc(a.role)}</td>
+        <td><select data-act="appstage" data-id="${a.id}" style="padding:4px 6px;font-size:11.5px">${['Researching','Applied','Referral sent','Screen','Loop','Take-home','Final','Offer','Closed'].map(s=>`<option ${a.stage===s?'selected':''}>${s}</option>`).join('')}</select></td>
+        <td><input data-act="appnote" data-id="${a.id}" value="${esc(a.note||'')}" style="padding:4px 8px;font-size:12px"></td>
+        <td><button class="btn sm ghost" data-act="delapp" data-id="${a.id}">\u2715</button></td></tr>`).join('')}
+    </table>`:'<p class="muted tiny" style="margin-top:8px">No applications logged. Do not open this until Q2 \u2014 applying before you have three reviewed artifacts wastes your best-fit companies.</p>'}
+  </div>`;
+}
+
+/* ============ VIEW: COACH ============ */
+function vCoach(){
+  return `
+  <div class="kicker">Ask anything \u00b7 grounded in your plan</div>
+  <h1>Coach</h1>
+  <p class="lede">This is an AI coach applying senior-PM hiring standards, with your profile and current week loaded as context. Use it for judgment calls: is this artifact good enough to publish, how do I frame this bullet, should I take the Series B offer over the unicorn.</p>
+  <div class="panel">
+    <div class="chat" id="chat">${S.chat.length?S.chat.map(m=>`<div class="msg ${m.r}">${esc(m.c)}</div>`).join(''):'<div class="msg a">Ask me something specific and I will give you a specific answer. Good openers: "score my positioning against the Senior PM bar", "how do I frame the WhatsApp work for a Growth PM role", "what should I cut from my resume".</div>'}</div>
+    <div class="row"><textarea id="cIn" rows="2" placeholder="Ask the coach\u2026" style="flex:1"></textarea><button class="btn pri" data-act="send">Send</button></div>
+    <div class="row" style="margin-top:10px">
+      ${['Score my positioning for Senior PM in Bengaluru','How do I reframe the WhatsApp work as retention?','What is my weakest story right now?'].map(p=>`<button class="btn sm ghost" data-act="quick" data-p="${esc(p)}">${esc(p)}</button>`).join('')}
+    </div>
+  </div>`;
+}
+
+/* ============ VIEW: DATA ============ */
+function vData(){
+  return `
+  <div class="kicker">Setup</div>
+  <h1>Setup &amp; Data</h1>
+  <p class="lede">Everything you tick, write, upload and score is stored in this artifact and persists between sessions. Export a backup after any heavy week \u2014 that file is your insurance.</p>
+  <div class="panel">
+    <h2>Profile</h2>
+    <div class="grid g2">
+      <div class="field"><label class="f">Name</label><input id="pName" value="${esc(S.profile.name)}"></div>
+      <div class="field"><label class="f">Plan start (Monday)</label><input id="pStart" type="date" value="${esc(S.profile.start)}"></div>
+      <div class="field"><label class="f">Target role</label><input id="pRole" value="${esc(S.profile.role)}"></div>
+      <div class="field"><label class="f">Target city</label><input id="pCity" value="${esc(S.profile.city)}"></div>
+    </div>
+    <div class="field"><label class="f">Context given to every review and coaching call</label><textarea id="pCtx" rows="8">${esc(S.profile.context)}</textarea></div>
+    <button class="btn pri" data-act="saveprofile">Save profile</button>
+  </div>
+  <div class="panel">
+    <h2>Backup</h2>
+    <div class="row"><button class="btn" data-act="export">Export JSON</button><button class="btn" data-act="import">Import JSON</button><button class="btn ghost" data-act="reset" style="color:var(--red)">Reset everything</button></div>
+    <input type="file" id="impFile" accept=".json" style="display:none">
+  </div>
+  <footer class="note">On sourcing: the curriculum links point to real public channels and their topic-search pages \u2014 Swag Wala PM (Shravan Tickoo), Lenny's Podcast, Aakash Gupta, Exponent, Diego Granados, The Product Folks, DataLemur, Mode. Reviews and coaching run on your own Anthropic key against explicit hiring rubrics; they are AI-generated and are not the work or opinion of any named coach. Data lives in data/career.db on your machine.</footer>`;
+}
+
+/* ============ BIND ============ */
+function bind(){
+  document.querySelectorAll('[data-act]').forEach(el=>{
+    const a=el.dataset.act;
+    if(el.tagName==='SELECT'||el.tagName==='INPUT'&&a!=='pick'){el.onchange=()=>act(a,el);return;}
+    el.onclick=()=>act(a,el);
+  });
+  const f=$('#aFile');if(f)f.onchange=e=>{if(e.target.files[0])readFile(e.target.files[0]);};
+  const imp=$('#impFile');if(imp)imp.onchange=e=>doImport(e.target.files[0]);
+  const ci=$('#cIn');if(ci)ci.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();act('send');}};
+  document.querySelectorAll('input[type=range][id^=ss]').forEach(r=>{
+    r.oninput=()=>{const l=document.getElementById('sv'+r.id.slice(2));if(l)l.textContent=r.value;};
+  });
+  const ch=$('#chat');if(ch)ch.scrollTop=ch.scrollHeight;
+}
+
+async function act(a,el){
+  const d=el?el.dataset:{};
+  switch(a){
+    case 'qtab': QTAB=+d.q; render(); break;
+    case 'togw': OPEN=(OPEN===+d.w?null:+d.w); render(); break;
+    case 'mark': {const n=+d.w;S.weeks[n]=S.weeks[n]||{};S.weeks[n].done=!S.weeks[n].done;save();render();break;}
+    case 'goweek': PAGE='plan';QTAB=WEEKS.find(w=>w.n===+d.w).q;OPEN=+d.w;render();break;
+    case 'goplan': PAGE='plan';render();break;
+    case 'build': {const w=WEEKS.find(x=>x.n===+d.w);STUDIO={title:w.artifact.split('\u2014')[0].trim()+' (W'+w.n+')',type:w.type,week:String(w.n),body:''};PAGE='studio';render();break;}
+    case 'pick': $('#aFile').click(); break;
+    case 'clearfile': PENDING=null; render(); break;
+    case 'review': await doReview(); break;
+    case 'case': vCase(d.c); break;
+    case 'backcases': PAGE='cases'; render(); break;
+    case 'savecase': {const c=d.c;S.cases[c]=S.cases[c]||{};S.cases[c].answer=$('#cAns').value;save();toast('Draft saved.');break;}
+    case 'gradecase': await gradeCase(d.c); break;
+    case 'tostudio': {const c=CASES.find(x=>x.id===d.c);const st=S.cases[d.c]||{};STUDIO={title:'Case: '+c.title,type:c.type,week:String(c.week),body:st.answer||$('#cAns').value};PAGE='studio';render();break;}
+    case 'status': {const x=S.artifacts.find(y=>y.id===d.id);x.status=el.value;save();break;}
+    case 'delart': {S.artifacts=S.artifacts.filter(y=>y.id!==d.id);save();render();break;}
+    case 'viewart': {const x=S.artifacts.find(y=>y.id===d.id);$('#pOut').innerHTML=`<div class="panel"><div class="row sp"><h2 style="margin:0">${esc(x.title)}</h2><span class="pill">${esc(x.status)}</span></div><div class="field" style="margin-top:12px"><label class="f">Public link (optional)</label><input data-act="setlink" data-id="${x.id}" value="${esc(x.link||'')}" placeholder="https://linkedin.com/posts/\u2026"></div><div class="box" style="white-space:pre-wrap;max-height:280px;overflow:auto">${esc((x.content||'').slice(0,3000))||'(file-based artifact)'}</div>${x.review?scorecard(x.review):''}</div>`;bind();break;}
+    case 'setlink': {const x=S.artifacts.find(y=>y.id===d.id);x.link=el.value;save();break;}
+    case 'hook': await makeHook(d.id); break;
+    case 'drill': openDrill(d.q); break;
+    case 'gradedrill': await gradeDrill(d.q); break;
+    case 'addapp': S.apps.push({id:uid(),co:prompt('Company')||'\u2014',role:prompt('Role')||'Senior PM',stage:'Researching',note:''});save();render();break;
+    case 'appstage': {const x=S.apps.find(y=>y.id===d.id);x.stage=el.value;save();break;}
+    case 'appnote': {const x=S.apps.find(y=>y.id===d.id);x.note=el.value;save();break;}
+    case 'delapp': S.apps=S.apps.filter(y=>y.id!==d.id);save();render();break;
+    case 'send': await sendChat($('#cIn').value); break;
+    case 'quick': await sendChat(d.p); break;
+    case 'saveprofile': S.profile={name:$('#pName').value,start:$('#pStart').value,role:$('#pRole').value,city:$('#pCity').value,context:$('#pCtx').value};save();toast('Profile saved.');render();break;
+    case 'copyreq': {const t=buildRequest(OFF.type,OFF.title,OFF.content);copyText(t);break;}
+    case 'copyreqstudio': {
+      syncStudio();
+      if(!STUDIO.body.trim()){toast('Paste the work first \u2014 the request needs content to carry.');return;}
+      copyText(buildRequest(STUDIO.type,STUDIO.title,STUDIO.body));break;}
+    case 'copyreqraw': copyText($('#hookReq').textContent); break;
+    case 'dlreq': {const t=buildRequest(OFF.type,OFF.title,OFF.content);const b=new Blob([t],{type:'text/markdown'});const u=document.createElement('a');u.href=URL.createObjectURL(b);u.download='review-request.md';u.click();toast('Downloaded \u2014 attach it in chat.');break;}
+    case 'pastesave': {
+      const raw=$('#pasteBack').value.trim(); if(!raw){toast('Nothing pasted.');return;}
+      let rev; try{rev=jparse(raw);rev.scoreAvg=avgOf(rev);rev.src='coach review';}
+      catch(e){rev={text:raw,src:'coach review'};}
+      attachReview(rev);toast('Review saved.');
+      const host=$('#rOut')||$('#cOut')||$('#dRes'); if(host){host.innerHTML=scorecard(rev);}
+      break;}
+    case 'saveself': {
+      const r=RUBRICS[OFF.type]||RUBRICS.strategy;
+      const scores=r.dims.map((d,i)=>({dim:d,score:+($('#ss'+i)||{value:3}).value,why:'self-assessed'}));
+      const avg=+(scores.reduce((a,b)=>a+b.score,0)/scores.length).toFixed(1);
+      const rev={level:avg>=4?'At bar':'Below bar',headline:'Self-assessment \u2014 replace with a coach review before publishing.',scores:scores,src:'self-score',scoreAvg:avg,fixes:[],strengths:[]};
+      attachReview(rev);toast('Self-score saved.');
+      const host=$('#rOut')||$('#cOut')||$('#dRes'); if(host){host.innerHTML=scorecard(rev);}
+      break;}
+    case 'saveonly': {const a=saveArtifact();toast('Saved to portfolio as a draft.');PAGE='portfolio';render();break;}
+    case 'export': doExport(); break;
+    case 'import': $('#impFile').click(); break;
+    case 'reset': if(confirm('Delete all progress, artifacts and reviews?')){S=JSON.parse(JSON.stringify(DEFAULT));save();render();} break;
+  }
+}
+
+/* ============ ACTIONS ============ */
+async function readFile(f){
+  if(!f)return;
+  toast('Extracting text from '+f.name+'\u2026');
+  const fd=new FormData(); fd.append('file',f);
+  try{
+    const r=await fetch('/api/upload',{method:'POST',body:fd});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error||('HTTP '+r.status));
+    syncStudio();
+    STUDIO.body=d.text; if(!STUDIO.title)STUDIO.title=d.name;
+    PENDING={name:d.name,words:d.words,id:d.id};
+    render(); toast(d.words.toLocaleString()+' words extracted from '+d.name+'.');
+  }catch(e){toast('Could not read that file: '+e.message);}
+}
+function attachBlocks(){return[];}
+function saveArtifact(){ // never lose the work, review or not
+  syncStudio();
+  const art={id:uid(),title:STUDIO.title||'Untitled artifact',type:STUDIO.type,week:STUDIO.week,status:'Draft',
+    content:STUDIO.body,file:PENDING?PENDING.name:'',score:null,review:null,link:'',ts:Date.now()};
+  S.artifacts.push(art);save();return art;
+}
+async function doReview(){
+  if(BUSY)return; syncStudio();
+  if(!STUDIO.body.trim()&&!PENDING){toast('Paste the work or attach a file first.');return;}
+  const art=saveArtifact();
+  BUSY=true;$('#rOut').innerHTML='<div class="typing">Reviewing against the '+esc(RUBRICS[STUDIO.type].label)+' rubric\u2026</div>';
+  try{
+    const r=await runReview(STUDIO.type,STUDIO.body);
+    r.scoreAvg=r.scoreAvg||avgOf(r);
+    art.review=r;art.score=r.scoreAvg;art.status=r.scoreAvg>=4?'Reviewed':'Draft';save();
+    $('#rOut').innerHTML=scorecard(r)+'<div class="row" style="margin-top:10px"><span class="chip green">saved to portfolio</span></div>';
+    STUDIO={title:'',type:STUDIO.type,week:'',body:''};PENDING=null; // form resets for the next artifact
+  }catch(e){
+    if(e.offline)$('#rOut').innerHTML=offlinePanel('artifact',art.id,STUDIO.type,STUDIO.title,STUDIO.body);
+    else $('#rOut').innerHTML='<div class="box" style="border-left-color:var(--red)">Review failed: '+esc(e.message)+'. The artifact is saved in your portfolio either way.</div>'+offlinePanel('artifact',art.id,STUDIO.type,STUDIO.title,STUDIO.body);
+    bind();
+  }
+  BUSY=false;
+}
+async function gradeCase(id){
+  if(BUSY)return;
+  const c=CASES.find(x=>x.id===id), ans=$('#cAns').value;
+  if(!ans.trim()){toast('Write your answer first.');return;}
+  S.cases[id]=S.cases[id]||{};S.cases[id].answer=ans;save();
+  BUSY=true;$('#cOut').innerHTML='<div class="typing">Grading against the hiring bar\u2026</div>';
+  try{
+    const body='CASE: '+c.title+'\nCONTEXT: '+c.context+'\nQUESTION: '+c.prompt+'\n\nCANDIDATE ANSWER:\n'+ans;
+    const r=await runReview('case',body);
+    r.scoreAvg=r.scoreAvg||avgOf(r);
+    S.cases[id].review=r;save();
+    $('#cOut').innerHTML=scorecard(r);
+  }catch(e){
+    const body='CASE: '+c.title+'\nQUESTION: '+c.prompt+'\n\nMY ANSWER:\n'+ans;
+    $('#cOut').innerHTML=(e.offline?'':'<div class="box" style="border-left-color:var(--red)">Grading failed: '+esc(e.message)+'</div>')+offlinePanel('case',id,'case',c.title,body);
+    bind();
+  }
+  BUSY=false;
+}
+function openDrill(q){
+  $('#dOut').innerHTML=`<div class="panel"><h2>${esc(q)}</h2>
+    <textarea id="dAns" rows="10" placeholder="Answer as you would out loud. Clarify, structure, go deep on one branch, close with metrics."></textarea>
+    <div class="row" style="margin-top:10px"><button class="btn pri" data-act="gradedrill" data-q="${esc(q)}">Grade this answer</button></div>
+    <div id="dRes" style="margin-top:14px"></div></div>`;
+  bind();$('#dAns').focus();
+}
+async function gradeDrill(q){
+  if(BUSY)return;const ans=$('#dAns').value;if(!ans.trim()){toast('Write an answer first.');return;}
+  BUSY=true;$('#dRes').innerHTML='<div class="typing">Grading\u2026</div>';
+  try{const r=await runReview('interview','QUESTION: '+q+'\n\nANSWER:\n'+ans);$('#dRes').innerHTML=scorecard(r);}
+  catch(e){$('#dRes').innerHTML=(e.offline?'':'<div class="box">Failed: '+esc(e.message)+'</div>')+offlinePanel('drill',null,'interview',q,'QUESTION: '+q+'\n\nMY ANSWER:\n'+ans);bind();}
+  BUSY=false;
+}
+async function makeHook(id){
+  if(BUSY)return;const x=S.artifacts.find(y=>y.id===id);
+  BUSY=true;$('#pOut').innerHTML='<div class="typing">Writing the post\u2026</div>';
+  try{
+    const t=(await api('/api/ai/hook',{title:x.title,content:x.content||'',profile:profilePayload()})).text;
+    $('#pOut').innerHTML='<div class="panel"><div class="row sp"><h2 style="margin:0">Draft post \u00b7 '+esc(x.title)+'</h2><button class="btn sm" data-act="copyhook">Copy</button></div><div class="box" id="hookTxt" style="white-space:pre-wrap;margin-top:10px">'+esc(t)+'</div></div>';
+    bind();
+    const cb=document.querySelector('[data-act="copyhook"]');if(cb)cb.onclick=()=>{navigator.clipboard.writeText(t);toast('Copied.');};
+  }catch(e){
+    const req='Write a LinkedIn post for this artifact. 120-180 words, open with a specific claim or number, no emojis, no "excited to share", max 2 hashtags, end with a question that invites disagreement.\n\nARTIFACT: '+x.title+'\nCONTENT:\n'+(x.content||'').slice(0,4000);
+    $('#pOut').innerHTML='<div class="panel"><div class="row sp"><h2 style="margin:0">Post draft \u00b7 two-step mode</h2><span class="chip gold">no API route</span></div><p class="tiny muted" style="margin:8px 0 12px">Copy this into your chat with Claude and it will come back written.</p><div class="box" style="white-space:pre-wrap;max-height:200px;overflow:auto" id="hookReq">'+esc(req)+'</div><button class="btn pri" style="margin-top:10px" data-act="copyreqraw">Copy request</button></div>';
+    bind();
+  }
+  BUSY=false;
+}
+async function sendChat(t){
+  if(BUSY||!t||!t.trim())return;
+  S.chat.push({r:'u',c:t.trim()});save();
+  const ci=$('#cIn');if(ci)ci.value='';
+  $('#chat').innerHTML=S.chat.map(m=>`<div class="msg ${m.r}">${esc(m.c)}</div>`).join('')+'<div class="msg a typing">thinking\u2026</div>';
+  $('#chat').scrollTop=9e9;BUSY=true;
+  try{
+    const out=(await api('/api/ai/chat',{messages:S.chat.slice(-12),profile:profilePayload(),week:String(curWeek()||'pre-launch')})).text;
+    S.chat.push({r:'a',c:out});save();
+  }catch(e){
+    S.chat.push({r:'a',c:e.offline
+      ? (e.nokey?'The server is running but has no ANTHROPIC_API_KEY set. Add it to .env and restart \u2014 then this coach runs on '+(HEALTH.model||'Opus')+'.':'The server is not responding. Start it with npm start, then try again.')
+      : 'Connection failed: '+e.message});
+  }
+  BUSY=false;
+  $('#chat').innerHTML=S.chat.map(m=>`<div class="msg ${m.r}">${esc(m.c)}</div>`).join('');
+  $('#chat').scrollTop=9e9;
+}
+function doExport(){window.open('/api/export','_blank');toast('Backup downloading \u2014 the server also snapshots hourly.');}
+function doImport(f){
+  if(!f)return;const rd=new FileReader();
+  rd.onload=()=>{try{S=Object.assign(JSON.parse(JSON.stringify(DEFAULT)),JSON.parse(rd.result));save();render();toast('Restored.');}catch(e){toast('That file could not be read.');}};
+  rd.readAsText(f);
+}
+
+/* ============ BOOT ============ */
+// debug handle: lets you inspect or repair state from the console
+window.OS={get state(){return S;},WEEKS:WEEKS,CASES:CASES,RUBRICS:RUBRICS,localCheck:localCheck,buildRequest:buildRequest,render:render,save:save};
+(async()=>{await load();render();})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# Render blueprint — New + > Blueprint > pick this repo.
+# The persistent disk is what keeps your data across deploys; without it
+# every redeploy wipes career.db. Disks require a paid instance type.
+services:
+  - type: web
+    name: product-career-os
+    runtime: docker
+    plan: starter
+    healthCheckPath: /healthz
+    disk:
+      name: career-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /data
+      - key: ANTHROPIC_MODEL
+        value: claude-opus-5
+      - key: ANTHROPIC_API_KEY
+        sync: false          # you are prompted for it; never stored in the repo
+      - key: APP_PASSWORD
+        sync: false
+      - key: APP_USER
+        value: sonam
